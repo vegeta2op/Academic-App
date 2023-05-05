@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertical Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+<head></head>
+<style>
+table {
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+
+}
+
+
+th, td {
+  padding: 0.8em;
+  text-align: left;
+}
+
+th {
+  background-color: #04AA6D;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #ddd;
+}
+
+td:nth-child(5), td:nth-child(6) {
+  text-align: center;
+}
+
+td:nth-child(5) a {
+  background-color: #04AA6D;
+  color: white;
+  border-radius: 4px;
+  padding: 0.4em 0.8em;
+  text-decoration: none;
+}
+
+td:nth-child(5) a:hover {
+  background-color: #218c74;
+}
+
+td:nth-child(6) input[type="checkbox"] {
+  transform: scale(1.4);
+}
+#myBtn {
+  background-color: #04AA6D;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+}
+
+#myBtn:hover {
+  background-color: #218c74;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.star {
+    visibility:hidden;
+    font-size:30px;
+    cursor:pointer;
+    top: 10px;
+    left: 10px;
+}
+.star:before {
+   content: "\2605";
+   position: absolute;
+   visibility:visible;
+}
+.star:checked:before {
+   content: "\2606";
+   position: absolute;
+}
+form {
+  display: flex;
+  align-items: center;
+}
+
+label {
+  margin-right: 10px;
+}
+
+input[type="text"] {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+button[type="submit"] {
+  padding: 5px 10px;
+  background-color: #04AA6D;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #218c74;
+}
+
+
+
+</style>
+<script>
+    function toggleMenu() {
+        var menuBar = document.getElementById('menuBar');
+        menuBar.classList.toggle('active');
+    }
+</script>
+</head>
+<body>
+
+    <nav id="menuBar">
+        <ul>
+            <li>
+                <a href="javascript:toggleMenu()">
+                    <img src="logo.png" width="50px" >
+                    <span>Menu</span>
+                </a>
+            </li>
+            <li>
+                <a href="./dashboard.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="./student.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" /></svg>
+                    <span>Students</span>
+                </a>
+            </li>
+            <li>
+                <a href="./profile.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm2.5 3a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm6.207.293a1 1 0 00-1.414 0l-6 6a1 1 0 101.414 1.414l6-6a1 1 0 000-1.414zM12.5 10a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" clip-rule="evenodd" /></svg>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="./predict.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" /></svg>
+                    <span>Predictor</span>
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+    <div style="margin-left:15%;padding:20px 16px;height:1000px;">
+    <br>
+    <h1>Notes</h1><br>
+<div class="container">
+  <div class="outer-box">
+    <div class="inner-box"></div>
+    <div class="inner-box"></div>
+    <div class="inner-box"></div>
+    <div class="inner-box"></div>
+  </div>
+</div>
+<br>
+<h1>Starred Students</h1>
+    <table className="table" id="1" style="border:1px solid black;margin-left:auto;margin-right:auto;">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>USN</th>
+            <th>Class</th>
+            <th>Previous Year Rank</th>
+            <th>View</th>
+            <th>Pinned</th>
+          </tr>
+        </thead>
+        <tbody id="data-out">
+
+          <tr>
+            <td></td>
+            <td></td>
+            <td>Class</td>
+            <td>Previous Year Rank</td>
+            <td><button id="myBtn">View</button>
+
+                <!-- The Modal -->
+                <div id="myModal" class="modal">
+
+                  <!-- Modal content -->
+                  <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p>Predicted marks are</p>
+                  </div>
+                  <script>
+                    // Get the modal
+                    var modal = document.getElementById("myModal");
+
+                    // Get the button that opens the modal
+                    var btn = document.getElementById("myBtn");
+
+                    // Get the <span> element that closes the modal
+                    var span = document.getElementsByClassName("close")[0];
+
+                    // When the user clicks the button, open the modal
+                    btn.onclick = function() {
+                      modal.style.display = "block";
+                    }
+
+                    // When the user clicks on <span> (x), close the modal
+                    span.onclick = function() {
+                      modal.style.display = "none";
+                    }
+
+                    // When the user clicks anywhere outside of the modal, close it
+                    window.onclick = function(event) {
+                      if (event.target == modal) {
+                        modal.style.display = "none";
+                      }
+                    }
+                    </script></div></td>
+            <td><input class="star" type="checkbox" title="bookmark page"></td>
+          </tr>
+      </tbody>
+
+      </table>
+
+    </div>
+<script src="./js/script.js"></script>
+    </body>
+</html>
