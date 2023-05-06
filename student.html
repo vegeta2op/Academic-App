@@ -9,6 +9,59 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
 <head></head>
+<style>
+#gridContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* adjust number of columns as needed */
+  grid-gap: 20px;
+}
+
+#gridContainer > div {
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  padding: 20px;
+
+}
+#gridContainer div {
+  border-radius: 10px;
+}
+.search-container {
+    margin: 20px 0;
+    border-radius: 20px;
+    background-color: #f2f2f2;
+    overflow: hidden;
+  }
+
+  /* Style for the search input field */
+  .search-container input[type=text] {
+    width: 75%;
+    padding: 12px;
+    border: none;
+    border-radius: 20px;
+    background-color: #f2f2f2;
+    float: left;
+    font-size: 16px;
+  }
+
+  /* Style for the search button */
+  .search-container button {
+    float: left;
+    width: 25%;
+    padding: 12px;
+    background: #ddd;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+.search-container button:hover {
+    background: #ccc;
+  }
+
+  /* Rounded corners for the student records boxes */
+  .grid-container > div {
+    border-radius: 10px;
+    }
+</style>
 
 <script>
     function toggleMenu() {
@@ -54,16 +107,57 @@
 
         </ul>
     </nav>
-    <div style="margin-left:15%;padding:20px 16px;height:1000px;">
-    <div class="student-info">
- <div class="grid-container">
-  <div class="box">
-    <span class="label">Name:</span>
-    <span class="value">John Doe</span>
+<div style="margin-left:15%;padding:20px 16px;height:1000px;">
+  <div class="search-container">
+    <input type="text" placeholder="Search by name or USN..." id="searchBar">
+    <button type="submit"><i class="fa fa-search"></i></button>
   </div>
+  <div class="student-info">
+    <div class="grid-container" id="gridContainer"></div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchBar = document.getElementById("searchBar");
+      const gridContainer = document.getElementById("gridContainer");
 
+      // Add event listener to the search bar input
+      searchBar.addEventListener("input", () => {
+        // Get the search term
+        const searchTerm = searchBar.value.toLowerCase();
+
+        // Loop through each child element of the grid container
+        Array.from(gridContainer.children).forEach((child) => {
+          // Get the name and USN values from the child element
+          const name = child.querySelector(".name").textContent.toLowerCase();
+          const usn = child.querySelector(".usn").textContent.toLowerCase();
+
+          // Check if the search term matches the name or USN
+          if (name.includes(searchTerm) || usn.includes(searchTerm)) {
+            // Show the child element if there's a match
+            child.style.display = "block";
+          } else {
+            // Hide the child element if there's no match
+            child.style.display = "none";
+          }
+        });
+      });
+
+      fetch('stud.json')
+        .then(response => response.json())
+        .then(data => {
+          data.forEach(student => {
+            const name = student.Name;
+            const usn = student.USN;
+            const studentInfo = document.createElement('div');
+            studentInfo.className = 'student-info';
+            studentInfo.innerHTML = `<p class="name">${name}</p><p class="usn">${usn}</p>`;
+            gridContainer.appendChild(studentInfo);
+          });
+        });
+    });
+  </script>
 </div>
-</div>
-<script src="./js/liststud.js"></script>
+
+
 </body>
 </html>

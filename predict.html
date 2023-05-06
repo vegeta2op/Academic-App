@@ -100,22 +100,25 @@ td:nth-child(6) input[type="checkbox"] {
 }
 
 /* The Close Button */
-.star {
-    visibility:hidden;
-    font-size:30px;
-    cursor:pointer;
-    top: 10px;
-    left: 10px;
+input.star {
+  visibility: hidden;
+  font-size: 30px;
+  cursor: pointer;
+  top: 10px;
+  left: 10px;
 }
-.star:before {
-   content: "\2605";
-   position: absolute;
-   visibility:visible;
+
+input.star:before {
+  content: "\2605";
+  position: absolute;
+  visibility: visible;
 }
-.star:checked:before {
-   content: "\2606";
-   position: absolute;
+
+input.star:checked:before {
+  content: "\2606";
+  position: absolute;
 }
+
 form {
   display: flex;
   align-items: center;
