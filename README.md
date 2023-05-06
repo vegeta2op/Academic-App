@@ -15,3 +15,6 @@
  ---
 Front-end 
 - Dashboard page added . 
+- Students Pofile Page , Starred Icons Front end Fixed . 
+> Backend is being Handeled by Team Members 
+> Any contributions are appreciated 
