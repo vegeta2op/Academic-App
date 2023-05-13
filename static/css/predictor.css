@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@200&display=swap');
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Lexend;
+    background-color: #004266;
+    background-blend-mode: multiply;
+    background-image: url('/static/images/cover.jpg'); 
+    background-repeat: no-repeat; 
+    background-size: cover;
+    background-position: center;
+  }
+  body::-webkit-scrollbar {
+    width: 0.5em;
+  }
+
+  body::-webkit-scrollbar-track {
+      background-color: #f1f1f1;
+  }
+  
+  body::-webkit-scrollbar-thumb {
+      background-color: #888;
+  }
+
+  .gb-p {
+    color: cornsilk;
+    position: sticky;
+    bottom: 20px;
+    left: 50px;
+    transform: translateX(-50%);
+    text-decoration: none;
+    font-size: 2rem;
+    transition: font-size 0.3s, color 0.3s;
+  }
+  
+  .gb-p:hover {
+    color: limegreen;
+    font-size: 2.5rem;
+  }
+
+  table {
+    background-color: whitesmoke;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+
+  table td {
+    font-size: 18px;
+  }
+
+  table tr {
+    border-bottom: 1px solid #ddd;
+  }
+ 
+  /* Style the table */
+  table {
+    width: 70%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 1.4rem;
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
+  
+  /* Add spacing between the table cells */
+  table td,
+  table th {
+    padding: 8px;
+    text-align: left;
+  }
+  
+  table th {
+    font-size: 20px;
+    background-color: cornsilk;
+    cursor:auto;
+  }
+
+  table th:first-child {
+    background-color: cornsilk;
+    border-top-left-radius: 1.4rem;
+  }
+  
+  table th:last-child {
+    background-color: cornsilk;
+    border-top-right-radius: 1.4rem;
+  }
+  
+  /* Style the "View" button */
+  .my-btn {
+    background-color: #004266;
+    border: none;
+    color: cornsilk;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: font-size 0.3s, color 0.3s;
+  }
+  
+ /* Style the page header */
+h1 {
+    font-size: 32px;
+    color: cornsilk;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+  
+  
+  /* Center the table and "Predictor" */
+  .container {
+    text-align: center;
+  }
+  
+  /* Center the table */
+  table {
+    margin: 0 auto;
+  }
+  
+  /* Move the table heading and rows to the right */
+  table th,
+  table td {
+    text-align: center;
+  }
+  
+  
+  table tbody tr:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+    transition: all 0.2s ease-in-out;
+    color: limegreen;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  /* Style the table rows on hover when cursor is over "View" button */
+  .my-btn:hover ~ tr {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+    transition: all 0.2s ease-in-out;
+  }
+
+  .my-btn:hover {
+    box-shadow: 0 0 10px 5px #527DF3;
+    background-color: #0000B9;
+    font-size: 19px;
+  }

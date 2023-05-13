@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View</title>
+    <link rel="stylesheet" href="/static/css/stylesV.css">
+</head>
+<body>
+    <h1>Marks Details</h1>
+    <form method="POST" action="/check_marks">
+        <label for="sem1">Semester 1</label>
+        <input type="number" id="sem1" name="sem1" value="{{ student['Sem1'] }}"><br><br>
+        <label for="sem2">Semester 2</label>
+        <input type="number" id="sem2" name="sem2" value="{{ student['Sem2'] }}"><br><br>
+        <label for="sem3">Semester 3</label>
+        <input type="number" id="sem3" name="sem3" value="{{ student['Sem3'] }}"><br><br>
+        <label for="sem4">Semester 4</label>
+        <input type="number" id="sem4" name="sem4" value="{{ student['Sem4'] }}"><br><br>
+        <label for="sem5">Semester 5</label>
+        <input type="number" id="sem5" name="sem5" value="{{ student['Sem5'] }}"><br><br>
+        <input type="hidden" id="usn" name="usn" value="{{ student['USN'] }}">
+        <input type="submit" value="Predict">
+    </form>
+    
+    <a class="gb" href="/predictor">⋘</a>
+</body>
+</html>
+

@@ -1,0 +1,87 @@
+body {
+    font-family: Lexend;
+    text-align: center;
+    background-color: #004266;
+    background-blend-mode: multiply;
+}
+
+h2 {
+    font-size:medium;
+    margin-bottom: 30px;
+    font-weight: normal;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    background-color: rgba(255, 255, 255, 0.7);
+	backdrop-filter: blur(5px);
+    border-radius: 20px;
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+	text-align: center;
+    padding: 10px 40px;
+    margin: 50px auto;
+}
+
+label {
+    align-items: center;
+    font-size:x-large;
+    color: black;
+    width: 300px;
+    font-weight: bold;
+    display: block;
+    
+}
+
+input[type="text"] {
+    width: 75vmin;
+    height: 25px;
+    align-items: center;
+    margin-left: 60px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    font-size: larger;
+    padding: 10px 40px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    align-items: center;
+    display: block;
+    margin: 30px auto;
+    
+}
+
+input[type="submit"]:hover {
+    border: 2px solid rgb(20, 220, 207);
+    background-color: #45a049;
+}
+
+img {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+    background-repeat: no-repeat;
+    
+}
+
+#my-logo {
+    background-repeat: no-repeat;
+    max-width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    display: block;
+}

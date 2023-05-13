@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Predictor</title>
+    <link rel="stylesheet" href="static/css/predictor.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+ <body>
+    <h1>List of Students</h1>
+        <br>
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>USN</th>
+                    <th>NAME</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>{{ student.USN }}</td>
+                        <td>{{ student.Name }}</td>
+                        <td><a href="/view/{{ student.USN }}" class="btn btn-primary my-btn">View</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <a class="gb-p" href="/dashboard">⋘</a>
+</body>
+</html>
