@@ -14,7 +14,7 @@
  VER 0.2
  ---
 Changes 
-> Backend Added ,Runs on Flask 
-> Added login Functionality , Signup desgin updated( no backedn yet )
-> Prediction of marks using ML ( Random Forest )
-> More to come....
+> - Backend Added ,Runs on Flask 
+> - Added login Functionality , Signup desgin updated( no backedn yet )
+> - Prediction of marks using ML ( Random Forest )
+> - More to come....
