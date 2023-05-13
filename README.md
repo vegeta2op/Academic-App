@@ -9,12 +9,12 @@
 
 
 
-#NOTE
+
  ---
- VER 0.01 
+ VER 0.2
  ---
-Front-end 
-- Dashboard page added . 
-- Students Pofile Page , Starred Icons Front end Fixed . 
-> Backend is being Handeled by Team Members 
-> Any contributions are appreciated 
+Changes 
+> Backend Added ,Runs on Flask 
+> Added login Functionality , Signup desgin updated( no backedn yet )
+> Prediction of marks using ML ( Random Forest )
+> More to come....
