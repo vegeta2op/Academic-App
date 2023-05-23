@@ -18,3 +18,10 @@ Changes
 > - Added login Functionality , Signup desgin updated( no backedn yet )
 > - Prediction of marks using ML ( Random Forest )
 > - More to come....
+---
+ VER 0.3
+ ---
+Changes 
+> - Backend Added Function
+> - New UI 
+
