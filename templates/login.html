@@ -33,9 +33,9 @@
           <a href="#" onclick="showSignUpDialog()">Sign up?</a>
         </div>
         {% if error_message %}
-        <div class="error_message">
-          {{ error_message }}
-        </div>
+          <div id="error_message" class="error_message">
+            {{ error_message }}
+          </div>
         {% endif %}
       </form>
     </div>
@@ -43,27 +43,59 @@
 
 
   <!-- Sign up dialog -->
-  <div id="signup-dialog" class="dialog" style="display: none">
-    <div class="dialog-content">
-      <span class="close" onclick="hideSignUpDialog()">&times;</span>
-      <h2>Sign up</h2>
-      <form method="POST" action="{{ url_for('signup') }}">
-        <div class="user-box">
-          <label>Email</label>
-          <input type="email" name="Email" placeholder="Enter your email address" required="">
-        </div>
-        <div class="user-box">
-          <label>Password</label>
-          <input type="password" name="Password" placeholder="Enter a password" required="">
-        </div>
-        <div class="user-box">
-          <label>Code</label>
-          <input type="text" name="Code" placeholder="Verification code" required="">
-        </div>
-        <button id="btn-l">Sign up</button>
-      </form>
+{% if error_messages %}
+<div id="signup-dialog" class="dialog">
+  <div class="dialog-content">
+    <span class="close" onclick="hideSignUpDialog()">&times;</span>
+    <h2>Sign up</h2>
+    <div class="error-messages">
+      <ul>
+        {% for error_message in error_messages %}
+        <li>{{ error_message }}</li>
+        {% endfor %}
+      </ul>
     </div>
+    <form method="POST" action="{{ url_for('signup') }}">
+      <div class="user-box">
+        <label>Email</label>
+        <input type="email" name="Email" placeholder="Enter your email address" required="">
+      </div>
+      <div class="user-box">
+        <label>Password</label>
+        <input type="password" name="Password" placeholder="Enter a password" required="">
+      </div>
+      <div class="user-box">
+        <label>Code</label>
+        <input type="text" name="Code" placeholder="Verification code" required="">
+      </div>
+      <button id="btn-l">Sign up</button>
+    </form>
   </div>
+</div>
+{% else %}
+<div id="signup-dialog" class="dialog" >
+  <div class="dialog-content">
+    <span class="close" onclick="hideSignUpDialog()">&times;</span>
+    <h2>Sign up</h2>
+    <form method="POST" action="{{ url_for('signup') }}">
+      <div class="user-box">
+        <label>Email</label>
+        <input type="email" name="Email" placeholder="Enter your email address" required="">
+      </div>
+      <div class="user-box">
+        <label>Password</label>
+        <input type="password" name="Password" placeholder="Enter a password" required="">
+      </div>
+      <div class="user-box">
+        <label>Code</label>
+        <input type="text" name="Code" placeholder="Verification code" required="">
+      </div>
+      <button id="btn-l">Sign up</button>
+    </form>
+  </div>
+</div>
+{% endif %}
+
 
 
 
@@ -77,8 +109,27 @@
     function hideSignUpDialog() {
       document.getElementById("signup-dialog").style.display = "none";
     }
+   function removeErrorMessage() {
+    var errorMessage = document.getElementById("error_message");
+    if (errorMessage) {
+      errorMessage.classList.add("fade-out");
+      setTimeout(function() {
+        errorMessage.remove();
+      }, 7000); // 7000 milliseconds = 7 seconds
+    }
+  }
 
+  // Call the function when the page loads
+  document.addEventListener("DOMContentLoaded", removeErrorMessage);
   </script>
+<script>
+  function showSignUpDialog() {
+    var dialog = document.getElementById("signup-dialog");
+    dialog.style.backdropFilter = "blur(5px)";
+    dialog.style.display = "block";
+  }
+</script>
+
 <script src="./static/js/main.js"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/css/dash.css">
-<head></head>
+
+
+
+</head>
+<style>
+      table {
+        width: 100%;
+      }
+
+      @media only screen and (max-width: 768px) {
+        table {
+          width: 100%;
+        }
+      }
+
+    </style>
 
 <script>
     function toggleMenu() {
@@ -32,34 +48,51 @@
         <ul>
             <li>
                 <a href="javascript:toggleMenu()">
-                    <img src="static/images/logo.png" width="70px" class="logo-menu" >
+                    <img src="static/images/logo.png" width="20px" height="20px" class="logo-menu" >
                     <span id="menu">Menu</span>
                 </a>
             </li>
             <li>
                 <a href="/dashboard">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+                    <img src="/static/images/dash.svg" alt="Dashboard Icon">
                     <span>Dashboard</span>
                 </a>
             </li>
             <li>
-                <a href="/student">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" /></svg>
-                    <span>Students</span>
-                </a>
-            </li>
-            <li>
-                <a href="/profile">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm2.5 3a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm6.207.293a1 1 0 00-1.414 0l-6 6a1 1 0 101.414 1.414l6-6a1 1 0 000-1.414zM12.5 10a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" clip-rule="evenodd" /></svg>
-                    <span>Profile</span>
+                <a href="/students">
+                    <img src="/static/images/students.svg" alt="Students Icon">
+                    <span>Stduents</span>
                 </a>
             </li>
             <li>
                 <a href="/predictor">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" /></svg>
+                    <img src="/static/images/predict.svg" alt="Predict Icon">
                     <span>Predictor</span>
                 </a>
             </li>
+             <li class="profile">
+                  <div class="circle">
+                    <div class="profile-image"></div>
+                  </div>
+                </li>
+              <li class="profile-name">
+                    <div class="profile-n"></div>
+                  <span>{{ session['email'] }}</span>
+                </li>
+                <br><br><br>
+                <br>
+                <br><br><br><br><br><br><br>
+                <br><br><br><br><br><br><br><br>
+               <li class="navbar-divider"></li>
+           <li class="logout" style="margin-top: auto;">
+            <a href="/logout">
+              <div class="logout-icon">
+                <img src="/static/images/logout.svg" alt="Logout Icon">
+              </div>
+              <span class="logout-text">Logout</span>
+            </a>
+          </li>
+
 
         </ul>
     </nav>
@@ -83,67 +116,71 @@
   </div>
 </div>
 <br>
-<h1>Starred Students</h1>
-    <table className="table" id="1" style="border:1px solid black;margin-left:auto;margin-right:auto;">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>USN</th>
-            <th>Class</th>
-            <th>Previous Year Rank</th>
-            <th>View</th>
-            <th>Pinned</th>
-          </tr>
-        </thead>
-        <tbody id="data-out">
+<br>
+<div class="container-2" style="width: auto; margin: 0 auto; ; padding: 20px; background-color: white;border-radius: 10px;">
+  <h1>Starred Students</h1>
+  <table class="table" id="1" style=" margin-left: auto; margin-right: auto; border-radius: 20px">
+    <thead>
+      <tr>
+        <th id="first-th">Name</th>
+        <th>USN</th>
+        <th>Class</th>
+        <th>Previous Year Rank</th>
+        <th>View</th>
+        <th id="last-th">Pinned</th>
+      </tr>
+    </thead>
 
-          <tr>
-            <td></td>
-            <td></td>
-            <td>VIII Sem</td>
-            <td>8.1</td>
-            <td><button id="myBtn">View</button>
+    <tbody id="data-out" style="border: none; background-color: white;">
+      <tr>
+        <td></td>
+        <td></td>
+        <td>VIII Sem</td>
+        <td>8.1</td>
+        <td>
+          <button id="myBtn">View</button>
+          <!-- The Modal -->
+          <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+              <span class="close">&times;</span>
+              <p>Predicted marks are</p>
+            </div>
+            <script>
+              // Get the modal
+              var modal = document.getElementById("myModal");
 
-                <!-- The Modal -->
-                <div id="myModal" class="modal">
+              // Get the button that opens the modal
+              var btn = document.getElementById("myBtn");
 
-                  <!-- Modal content -->
-                  <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <p>Predicted marks are</p>
-                  </div>
-                  <script>
-                    // Get the modal
-                    var modal = document.getElementById("myModal");
+              // Get the <span> element that closes the modal
+              var span = document.getElementsByClassName("close")[0];
 
-                    // Get the button that opens the modal
-                    var btn = document.getElementById("myBtn");
+              // When the user clicks the button, open the modal
+              btn.onclick = function() {
+                modal.style.display = "block";
+              }
 
-                    // Get the <span> element that closes the modal
-                    var span = document.getElementsByClassName("close")[0];
+              // When the user clicks on <span> (x), close the modal
+              span.onclick = function() {
+                modal.style.display = "none";
+              }
 
-                    // When the user clicks the button, open the modal
-                    btn.onclick = function() {
-                      modal.style.display = "block";
-                    }
+              // When the user clicks anywhere outside of the modal, close it
+              window.onclick = function(event) {
+                if (event.target == modal) {
+                  modal.style.display = "none";
+                }
+              }
+            </script>
+          </div>
+        </td>
+        <td><input class="star" type="checkbox" title="bookmark page"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-                    // When the user clicks on <span> (x), close the modal
-                    span.onclick = function() {
-                      modal.style.display = "none";
-                    }
-
-                    // When the user clicks anywhere outside of the modal, close it
-                    window.onclick = function(event) {
-                      if (event.target == modal) {
-                        modal.style.display = "none";
-                      }
-                    }
-                    </script></div></td>
-            <td><input class="star" type="checkbox" title="bookmark page"></td>
-          </tr>
-      </tbody>
-
-      </table>
 
     </div>
 <script src="static/js/script.js"></script>

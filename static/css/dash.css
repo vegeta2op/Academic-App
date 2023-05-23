@@ -3,7 +3,7 @@ body {
   font-family: 'Lexend';
   background: #004266;
   background-blend-mode: multiply;
-  background-image: url('/static/images/cover.jpg'); 
+  background-color: #E7EEF6;
   background-repeat: no-repeat; 
   background-size: cover;
   background-position: center;
@@ -21,6 +21,7 @@ body::-webkit-scrollbar-thumb {
     background-color: #888;
 }
 
+
 nav {
             position: fixed;
             height: auto;
@@ -28,7 +29,7 @@ nav {
             top: 0;
             bottom: 0;
             margin: auto 0;
-            background-color: #e0dbdb;
+            background-color: #FFFF;
             padding: 0px 0px;
             border-radius: 0px;
         }
@@ -39,6 +40,7 @@ nav {
             align-items: center;
             flex-flow: column;
             height: 100%;
+            padding:inherit
         }
 
         nav ul li {
@@ -46,19 +48,19 @@ nav {
         }
 
         nav ul li a {
-            text-decoration: none;
-            color: #2a3555;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.2s all ease;
-            padding: 20px 20px;
+          text-decoration: inherit;
+          color: #2a3555;
+          display: flex;
+          align-items: center;
+          cursor: e-resize;
+          width: max-content;
+          transition: 0.2s all ease;
+          padding: 21px 36px;
         }
 
         nav ul li a svg {
-            width: 30px;
-            height: 30px;
+            width: 25px;
+            height: 25px;
         }
 
         nav ul li a svg path {
@@ -67,10 +69,9 @@ nav {
 
         nav ul li a span {
             position: absolute;
-            background-color: #e0dbdb;
             padding: 2px 15px;
             border-radius: 30px;
-            margin-left: 10px;
+            margin-left: -10px;
             font-weight: 500;
             font-size: 15px;
             visibility: hidden;
@@ -91,15 +92,122 @@ nav {
         }
 
         nav.active ul li a span {
-            position: relative;
-            opacity: 1;
-            visibility: visible;
-            margin-left: 0;
+          position: relative;
+          opacity: 1;
+          visibility: visible;
+          margin-right: -23px;
         }
 
         nav.active ul li a:hover span {
             margin-left: 0;
         }
+  .navbar-divider {
+  border: none;
+  border-top: 2px solid rgba(0, 0, 0, 0.2); /* Light black color */
+  margin: 10px 0;
+  opacity: 1;
+}
+
+
+
+.profile .circle {
+   position: relative;
+  top: 58%;
+  left: 47%;
+  transform: translate(-50%, -50%);
+  width: 46px;
+  height: 45px;
+  border: 2px solid #ccc;
+  border-radius: 55%;
+  overflow: hidden;
+}
+
+.profile .circle::before {
+   content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-image: url('/static/images/usericon.jpg');
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.navbar-expanded .profile .circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.profile span {
+  margin-left: 10px;
+}
+.profile-name span {
+  margin-left: 10px;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+/* Media query for collapsed navbar */
+@media (max-width: 768px) {
+  .navbar-collapsed .profile-name span {
+    opacity: 0;
+  }
+}
+
+.logout .logout-icon {
+  margin-left: 40px;
+  width: -24px;
+  height: -24px;
+}
+
+.logout .logout-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.logout .logout-text {
+  font-size: 20px;
+  display: none;
+}
+
+/* Media query for expanded navbar */
+@media (min-width: 768px) {
+  .logout .logout-text {
+    display: inline;
+  }
+}
+
+/* Media query for collapsed navbar */
+@media (max-width: 768px) {
+  .logout .logout-icon svg {
+    display: none;
+  }
+  .logout .logout-text {
+    display: inline;
+  }
+}
+
+
+th#last-th {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+th#first-th {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+
+
+
+
 .box {
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 10px;
@@ -117,7 +225,7 @@ nav {
 }
 
 h1 {
-  color: cornsilk;
+  color: black;
 }
 
 h2, p {
@@ -169,7 +277,7 @@ p {
   align-items: stretch;
   padding: 50px;
   border-radius: 10px;
-  background-color: #e0e0e0;
+  background-color: white;
   width: 100%; /* add this line */
 }
 .inner-box {
@@ -187,28 +295,28 @@ p {
 .inner-box:nth-child(1) {
   font-weight: bold;
   color:black;
-  background-color: #EBC2FF; 
- 
+  background-color: #EBC2FF;
+
 }
 
 .inner-box:nth-child(2) {
   font-weight: bold;
   color:black;
-  background-color: #FDE1AB; 
-  
+  background-color: #FDE1AB;
+
 }
 
 .inner-box:nth-child(3) {
   font-weight: bold;
   color:black;
-  background-color: #CCF0BF; 
- 
+  background-color: #CCF0BF;
+
 }
 
 .inner-box:nth-child(4) {
   font-weight: bold;
   color:black;
-  background-color: #BAE5F4; 
+  background-color: #BAE5F4;
 }
 
 .inner-box textarea {
@@ -239,11 +347,11 @@ p {
 
 #menuBar img {
   display: block;
-  margin: 0 auto;
-  width: 70px;
-  height: auto;
-  position: relative;
-  left: -35px;
+    margin: 0 auto;
+    width: 36px;
+    height: auto;
+    position: inherit;
+    left: -35px;
 }
 
 span #menu {
@@ -274,10 +382,18 @@ th, td {
 }
 
 th {
-  background-color: cornsilk;
+  background-color: #e8ecf1;
   color: black;
 }
+tr::nth-child(1) {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
 
+tr:last-child {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
 tr:nth-child(even) {
   background-color: #f2f2f2;
 }

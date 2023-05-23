@@ -2,13 +2,22 @@
 <html>
 <head>
     <title>Results</title>
+    <!-- Add your CSS stylesheets and other meta tags if needed -->
 </head>
 <body>
     <h1>Results</h1>
-    <p>Predicted marks for 6th semester: {{ predicted_marks }}</p>
-    <p>R2 score (cross-validation): {{ r2_cv }}</p>
-    <p>R2 score (testing set): {{ r2 }}</p>
-    <p>Mean squared error (testing set): {{ mse }}</p>
-    <p>Percentage change in marks from 1st to 5th semester: {{ percentage_change }}%</p>
+    <p>USN: {{ student.USN }}</p>
+    <p>Semester 1: {{ sem1 }}</p>
+    <p>Semester 2: {{ sem2 }}</p>
+    <p>Semester 3: {{ sem3 }}</p>
+    <p>Semester 4: {{ sem4 }}</p>
+    <p>Semester 5: {{ sem5 }}</p>
+    <p>Predicted Marks: {{ predicted_marks }}</p>
+    <p>R2 Score (Cross-Validation): {{ r2_cv }}</p>
+    <p>R2 Score (Test): {{ r2 }}</p>
+    <p>Mean Squared Error (Test): {{ mse }}</p>
+    <p>Percentage Change: {{ percentage_change }}%</p>
+    
+    <!-- Add any other result details or formatting as desired -->
 </body>
 </html>

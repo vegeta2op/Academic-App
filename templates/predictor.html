@@ -1,35 +1,160 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Predictor</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Progression</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/css/predictor.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+      table {
+        width: 100%;
+      }
+
+      @media only screen and (max-width: 768px) {
+        table {
+          width: 100%;
+        }
+      }
+    </style>
 </head>
- <body>
-    <h1>List of Students</h1>
-        <br>
-    <div class="container">
-        <table class="table">
+<body>
+  
+
+    <nav id="menuBar">
+        <ul>
+            <li>
+                <a href="javascript:toggleMenu()">
+                    <img src="static/images/logo.png" width="20px" height="20px" class="logo-menu" >
+                    <span id="menu">Menu</span>
+                </a>
+            </li>
+            <li>
+                <a href="/dashboard">
+                    <img src="/static/images/dash.svg" alt="Dashboard Icon">
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="/students">
+                    <img src="/static/images/students.svg" alt="Students Icon">
+                    <span>Stduents</span>
+                </a>
+            </li>
+            <li>
+                <a href="/predictor">
+                    <img src="/static/images/predict.svg" alt="Predict Icon">
+                    <span>Predictor</span>
+                </a>
+            </li>
+             <li class="profile">
+                  <div class="circle">
+                    <div class="profile-image"></div>
+                  </div>
+                </li>
+              <li class="profile-name">
+                    <div class="profile-n"></div>
+                  <span>{{ session['email'] }}</span>
+                </li>
+                <br><br><br>
+                <br>
+                <br><br><br><br><br><br><br>
+                <br><br><br><br><br><br><br><br>
+               <li class="navbar-divider"></li>
+           <li class="logout" style="margin-top: auto;">
+            <a href="/logout">
+              <div class="logout-icon">
+                <img src="/static/images/logout.svg" alt="Logout Icon">
+              </div>
+              <span class="logout-text">Logout</span>
+            </a>
+          </li>
+
+
+        </ul>
+    </nav>
+    <div style="margin-left: 15%; padding: 20px 16px; height: 1000px;">
+      <h1>PREDICTOR</h1>
+      <form id="searchForm">
+        <label for="searchInput">Search by USN or Name</label>
+        <input class="form-control" id="searchInput" type="text" placeholder="Enter your search query">
+      </form>
+    
+      <div class="container-2" style="width: auto; height: 60%; margin: 0 auto; padding: 20px; background-color: white; border-radius: 10px;">
+        <h1>List of Students</h1>
+        <div class="table-container">
+          <table class="table" id="studentsTable">
             <thead>
-                <tr>
-                    <th>USN</th>
-                    <th>NAME</th>
-                    <th></th>
-                </tr>
+              <tr>
+                <th id="first-th">Name</th>
+                <th>USN</th>
+                <th>Class</th>
+                <th id="last-th">View</th>
+              </tr>
             </thead>
             <tbody>
-                {% for student in students %}
-                    <tr>
-                        <td>{{ student.USN }}</td>
-                        <td>{{ student.Name }}</td>
-                        <td><a href="/view/{{ student.USN }}" class="btn btn-primary my-btn">View</a></td>
-                    </tr>
-                {% endfor %}
+              {% for student in students %}
+              <tr>
+                <td>{{ student.Name }}</td>
+                <td>1AM19CS{{ student.USN }}</td>
+                <td>6Th Sem</td>
+                <td>
+                  <a href="/view/{{ student.USN }}" class="btn btn-primary my-btn" style="display: inline-block; padding: 5px 10px; border: 1px solid #36B5EB; border-radius: 5px; background-color: #36B5EB; color: white; text-decoration: none;">View</a>
+                </td>                
+              </tr>
+              {% endfor %}
             </tbody>
-        </table>
+          </table>
+        </div>
+      </div>
     </div>
-    <a class="gb-p" href="/dashboard">⋘</a>
+    
+    
+  
+<script>
+// Using JavaScript
+document.getElementById("searchForm").addEventListener("submit", function(event) {
+  event.preventDefault(); // Prevent form submission
+  searchTable(); // Call the searchTable function
+});
+
+// Using jQuery
+$("#searchForm").submit(function(event) {
+  event.preventDefault(); // Prevent form submission
+  searchTable(); // Call the searchTable function
+});
+
+</script>
+<script>
+  document.getElementById("searchForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission
+    searchTable(); // Call the searchTable function
+  });
+
+  document.getElementById("searchInput").addEventListener("input", function() {
+    searchTable(); // Call the searchTable function
+  });
+
+  function searchTable() {
+    var input = document.getElementById("searchInput").value.toLowerCase(); // Get the search query
+    var table = document.getElementById("studentsTable"); // Get the table element
+    var rows = table.getElementsByTagName("tr"); // Get all table rows
+
+    for (var i = 1; i < rows.length; i++) { // Start from 1 to skip the header row
+      var name = rows[i].getElementsByTagName("td")[0].innerText.toLowerCase(); // Get the name column value
+      var usn = rows[i].getElementsByTagName("td")[1].innerText.toLowerCase(); // Get the USN column value
+
+      // Check if the search query matches the name or USN
+      if (name.includes(input) || usn.includes(input)) {
+        rows[i].style.display = ""; // Show the row
+      } else {
+        rows[i].style.display = "none"; // Hide the row
+      }
+    }
+  }
+</script>
 </body>
 </html>
