@@ -11,17 +11,11 @@
 
 
  ---
- VER 0.2
+ VER 1.0
  ---
 Changes 
-> - Backend Added ,Runs on Flask 
-> - Added login Functionality , Signup desgin updated( no backedn yet )
-> - Prediction of marks using ML ( Random Forest )
-> - More to come....
----
- VER 0.3
- ---
-Changes 
-> - Backend Added Function
-> - New UI 
+> Session login for Teacher .
+> Only AMC College adderss email 
+> Fixed Regression Model for Prediction 
+> A major Update Next month...
 
