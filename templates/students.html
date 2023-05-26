@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Progression</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/stud.css">
+
+    <script>
+        function toggleMarksBox(usn) {
+            const marksBox = document.getElementById('marksBox');
+            const marksContainer = document.getElementById('marksContainer');
+            
+            // Clear previous marks
+            marksContainer.innerHTML = '';
+            
+            // Find the student object with the matching USN
+            const student = students.find(student => student.USN === usn);
+            
+            if (student) {
+                // Populate marks for the clicked USN
+                for (let i = 0; i < student.marks.length; i++) {
+                    marksContainer.innerHTML += `<div class="mark">Semester ${i + 1}: ${student.marks[i]}</div>`;
+                }
+                
+                // Toggle visibility of the marks box
+                marksBox.style.display = marksBox.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+        </script>
+
+</head>
+<style>
+      table {
+        width: 100%;
+      }
+
+      @media only screen and (max-width: 768px) {
+        table {
+          width: 100%;
+        }
+      }
+
+    </style>
+
+<script>
+    function toggleMenu() {
+        var menuBar = document.getElementById('menuBar');
+        menuBar.classList.toggle('active');
+    }
+</script>
+</head>
+<body>
+  <script>
+    const textarea = document.getElementById('sticky-note');
+    textarea.addEventListener('input', function() {
+      // Get the first line of the textarea
+      const firstLine = this.value.substr(0, this.value.indexOf('\n'));
+      // Set the textarea value to the first line plus the user input
+      this.value = `${firstLine}\n${this.value.substr(this.value.indexOf('\n') + 1)}`;
+    });
+  </script>
+
+    <nav id="menuBar">
+        <ul>
+            <li>
+                <a href="javascript:toggleMenu()">
+                    <img src="static/images/logo.png" width="20px" height="20px" class="logo-menu" >
+                    <span id="menu">Menu</span>
+                </a>
+            </li>
+            <li>
+                <a href="/dashboard">
+                    <img src="/static/images/dash.svg" alt="Dashboard Icon">
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="/students">
+                    <img src="/static/images/students.svg" alt="Students Icon">
+                    <span>Stduents</span>
+                </a>
+            </li>
+            <li>
+                <a href="/predictor">
+                    <img src="/static/images/predict.svg" alt="Predict Icon">
+                    <span>Predictor</span>
+                </a>
+            </li>
+             <li class="profile">
+                  <div class="circle">
+                    <div class="profile-image"></div>
+                  </div>
+                </li>
+              <li class="profile-name">
+                    <div class="profile-n"></div>
+                  <span>{{ session['email'] }}</span>
+                </li>
+                <br><br><br>
+                <br>
+                <br><br><br><br><br><br><br>
+                <br><br><br><br><br><br><br><br>
+               <li class="navbar-divider"></li>
+           <li class="logout" style="margin-top: auto;">
+            <a href="/logout">
+              <div class="logout-icon">
+                <img src="/static/images/logout.svg" alt="Logout Icon">
+              </div>
+              <span class="logout-text">Logout</span>
+            </a>
+          </li>
+
+
+        </ul>
+    </nav>
+    <div style="margin-left:15%;padding:20px 16px;height:1000px;">
+    <br>
+    <h1>Student Information</h1>
+    <div class="container">
+        {% for student in students %}
+        <div class="student-box" onclick="toggleMarksBox('{{ student.USN }}')">
+            <img src="/static/images/profilepic.svg" alt="Dashboard Icon" width="45px" height="45px">
+            <p style="color: black;">{{ student.Name }}</p>
+            <p><strong></strong> 1AM19CS{{ student.USN }}</p>
+        </div>
+        <div id="{{ student.USN }}" class="marks-container">
+            <div class="marks-content">
+                <div class="close-button" onclick="closeMarksBox('{{ student.USN }}')">Close</div>
+                <h2>Marks Details</h2>
+                <div class="mark">Semester 1: {{ student['First sem'] }}</div>
+                <div class="mark">Semester 2: {{ student['Second sem'] }}</div>
+                <div class="mark">Semester 3: {{ student['Third sem'] }}</div>
+                <div class="mark">Semester 4: {{ student['Fourth sem'] }}</div>
+                <div class="mark">Semester 5: {{ student['Fifth sem'] }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <style>
+        .marks-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+        }
+    
+        .marks-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+    
+        .student-box {
+            cursor: pointer;
+        }
+    
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+            padding: 6px 12px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    
+        .mark {
+            margin-bottom: 10px;
+        }
+    </style>
+    
+    <script>
+        function toggleMarksBox(usn) {
+            const marksContainer = document.getElementById(usn);
+    
+            // Show the clicked marks container
+            marksContainer.style.display = 'block';
+        }
+    
+        function closeMarksBox(usn) {
+            const marksContainer = document.getElementById(usn);
+            marksContainer.style.display = 'none';
+        }
+    </script>
+    
+    </div>
+</body>
+</html>    

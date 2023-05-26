@@ -8,11 +8,14 @@ from sklearn.model_selection import train_test_split, cross_val_score
 from flask import redirect, url_for
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.linear_model import Lasso, LassoCV
 import sqlite3
 import csv
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Create a Flask application
-app = Flask(__name__)
+app = Flask(__name__,static_folder='static')
 app.secret_key = 'your_secret_key'
 
 # Initialize the SQLite3 database
@@ -35,7 +38,7 @@ def signup():
         email = request.form["Email"]
         password = request.form["Password"]
         code = request.form["Code"]
-        if code != "Zain":
+        if code != "AMCEC@123":
             flash("Code not verified. Please try again.")
             return redirect("/")
 
@@ -93,6 +96,32 @@ def login():
 
     return render_template("login.html", error_message=error_message)
 
+import json
+
+@app.route('/save-note', methods=['POST'])
+def save_note():
+    note_data = request.get_json()
+    note_id = note_data['noteId']
+    content = note_data['content']
+    user_email = session['email']
+
+    # Load the existing data from the JSON file
+    with open('emps.json', 'r') as file:
+        data = json.load(file)
+
+    # Update the data for the specific user and note
+    if user_email in data:
+        data[user_email][note_id] = content
+    else:
+        data[user_email] = {note_id: content}
+
+    # Save the updated data back to the JSON file
+    with open('emps.json', 'w') as file:
+        json.dump(data, file)
+
+    # No return statement
+
+
 
 @app.route("/dashboard")
 def dashboard():
@@ -107,6 +136,38 @@ df = pd.read_csv('data.csv')
 # Define a predictor page
 from flask import request
 import math
+@app.route("/students")
+def students():
+    df = pd.read_csv('data.csv')
+
+    return render_template('students.html', students=df.to_dict('records'))
+@app.route('/update-marks', methods=['POST'])
+def update_marks():
+    usn = request.form['usn']
+    sem1 = request.form['sem1']
+    sem2 = request.form['sem2']
+    sem3 = request.form['sem3']
+    sem4 = request.form['sem4']
+    sem5 = request.form['sem5']
+    # Update the marks in the CSV file
+    with open('data.csv', 'r') as file:
+        students = list(csv.DictReader(file))
+
+    for student in students:
+        if student['USN'] == usn:
+            student['First sem'] = sem1
+            student['Second sem'] = sem2
+            student['Third sem'] = sem3
+            student['Fourth sem'] = sem4
+            student['Fifth sem'] = sem5
+
+    with open('data.csv', 'w', newline='') as file:
+        fieldnames = ['Name', 'USN', 'First sem', 'Second sem', 'Third sem', 'Fourth sem', 'Fifth sem', 'Sixth sem']
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(students)
+
+    return render_template('dashboard.html',students=df.to_dict('records'))
 
 @app.route("/predictor")
 def predictor():
@@ -163,12 +224,12 @@ def results(usn):
     input_data = [[sem1, sem2, sem3, sem4, sem5]]
     # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    # Train the Random Forest model using cross-validation
-    model_cv = RandomForestRegressor(n_estimators=200, random_state=42)
-    scores = cross_val_score(model_cv, X_train, y_train, cv=5, scoring='r2')
-    r2_cv = scores.mean()
-    # Train the Random model on the entire dataset
-    model = RandomForestRegressor(n_estimators=200, random_state=42)
+    # Train the Lasso Regression model using cross-validation
+    model_cv = LassoCV(cv=5, random_state=42)
+    model_cv.fit(X_train, y_train)
+    r2_cv = model_cv.score(X_train, y_train)
+    # Train the Lasso model on the entire dataset
+    model = Lasso(alpha=1, random_state=42)
     model.fit(X_train, y_train)
     # Make a prediction for the selected student's marks
     predicted_marks = model.predict(input_data)
@@ -180,9 +241,18 @@ def results(usn):
     first_semester_marks = student.iloc[:, 2].values
     last_semester_marks = student.iloc[:, 7].values
     percentage_change = ((last_semester_marks - first_semester_marks) / first_semester_marks) * 100
-    # Render the results.html template with the prediction results
-    return render_template('view.html', student=student, usn=usn, sem1=sem1, sem2=sem2, sem3=sem3, sem4=sem4, sem5=sem5,predicted_marks=predicted_marks[0], r2_cv=r2_cv, r2=r2, mse=mse,percentage_change=percentage_change)
 
+    # Create a scatter plot
+    plt.figure(figsize=(8, 6))
+    sns.scatterplot(x=y_test, y=y_pred)
+    plt.xlabel('Actual Marks')
+    plt.ylabel('Predicted Marks')
+    plt.title('Actual vs. Predicted Marks')
+    graph_filename = 'scatter_plot.png'
+    plt.savefig(os.path.join('static', graph_filename))  # Save the plot in the 'static' folder
+
+    # Render the results.html template with the prediction results, graph name, and other variables
+    return render_template('view.html', student=student,usn=usn, sem1=sem1, sem2=sem2, sem3=sem3, sem4=sem4, sem5=sem5 ,predicted_marks=predicted_marks[0], r2_cv=r2_cv, r2=r2, mse=mse, percentage_change=percentage_change, graph_filename=graph_filename)
 
 @app.route("/logout",methods=['GET', 'POST'])
 def logout():

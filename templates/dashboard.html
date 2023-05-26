@@ -11,8 +11,6 @@
     <link rel="stylesheet" href="static/css/dash.css">
 
 
-
-</head>
 <style>
       table {
         width: 100%;
@@ -98,23 +96,25 @@
     </nav>
     <div style="margin-left:15%;padding:20px 16px;height:1000px;">
     <br>
-    <h1>Notes</h1><br>
+    <h1>Notes</h1>
+<br>
 <div class="container">
   <div class="outer-box">
     <div class="inner-box">
-      <textarea class="sticky-note readonly">Daily-to-do</textarea>
+      <textarea id="note1" class="sticky-note" oninput="saveNote(1)">To Do List</textarea>
     </div>
     <div class="inner-box">
-      <textarea class="sticky-note readonly">Daily-to-do</textarea>
+      <textarea id="note2" class="sticky-note" oninput="saveNote(2)">To Do List</textarea>
     </div>
     <div class="inner-box">
-      <textarea class="sticky-note readonly">Daily-to-do</textarea>
+      <textarea id="note3" class="sticky-note" oninput="saveNote(3)">To Do List</textarea>
     </div>
     <div class="inner-box">
-      <textarea class="sticky-note readonly">Daily-to-do</textarea>
+      <textarea id="note4" class="sticky-note" oninput="saveNote(4)">To Do List</textarea>
     </div>
   </div>
 </div>
+
 <br>
 <br>
 <div class="container-2" style="width: auto; margin: 0 auto; ; padding: 20px; background-color: white;border-radius: 10px;">
@@ -125,64 +125,144 @@
         <th id="first-th">Name</th>
         <th>USN</th>
         <th>Class</th>
-        <th>Previous Year Rank</th>
         <th>View</th>
-        <th id="last-th">Pinned</th>
+        <th id="last-th">Update Marks</th>
       </tr>
     </thead>
 
-    <tbody id="data-out" style="border: none; background-color: white;">
+    <tbody>
+      {% for student in students %}
       <tr>
-        <td></td>
-        <td></td>
-        <td>VIII Sem</td>
-        <td>8.1</td>
+        <td>{{ student.Name }}</td>
+        <td>1AM19CS{{ student.USN }}</td>
+        <td>6Th Sem</td>
         <td>
-          <button id="myBtn">View</button>
-          <!-- The Modal -->
-          <div id="myModal" class="modal">
-            <!-- Modal content -->
-            <div class="modal-content">
-              <span class="close">&times;</span>
-              <p>Predicted marks are</p>
-            </div>
-            <script>
-              // Get the modal
-              var modal = document.getElementById("myModal");
-
-              // Get the button that opens the modal
-              var btn = document.getElementById("myBtn");
-
-              // Get the <span> element that closes the modal
-              var span = document.getElementsByClassName("close")[0];
-
-              // When the user clicks the button, open the modal
-              btn.onclick = function() {
-                modal.style.display = "block";
-              }
-
-              // When the user clicks on <span> (x), close the modal
-              span.onclick = function() {
-                modal.style.display = "none";
-              }
-
-              // When the user clicks anywhere outside of the modal, close it
-              window.onclick = function(event) {
-                if (event.target == modal) {
-                  modal.style.display = "none";
-                }
-              }
-            </script>
-          </div>
+          <a href="/view/{{ student.USN }}" class="btn btn-primary my-btn" style="display: inline-block; padding: 5px 10px; border: 1px solid #36B5EB; border-radius: 5px; background-color: #36B5EB; color: white; text-decoration: none;">View</a>
         </td>
-        <td><input class="star" type="checkbox" title="bookmark page"></td>
+        <td>
+          <button class="btn btn-primary my-btn" onclick="toggleMarksBox('{{ student.USN }}')" style="display: inline-block; padding: 5px 10px; border: 1px solid #36B5EB; border-radius: 5px; background-color: #36B5EB; color: white; text-decoration: none;">Update</button>
+        </td>
       </tr>
-    </tbody>
-  </table>
-</div>
+      <div class="marks-content" id="marksBox_{{ student.USN }}" >
+        <div class="close-button" onclick="closeMarksBox('{{ student.USN }}')" >Close</div>
+        <h2>Marks Details</h2>
+        <form id="marks-form" method="POST" action="/update-marks" enctype="multipart/form-data">
+          <label for="usn">USN:</label>
+          <input type="text" id="usn" name="usn" required><br><br>
+          <label for="sem1">Semester 1:</label>
+          <input type="text" id="sem1" name="sem1" required><br><br>
+          <label for="sem2">Semester 2:</label>
+          <input type="text" id="sem2" name="sem2" required><br><br>
+          <label for="sem3">Semester 3:</label>
+          <input type="text" id="sem3" name="sem3" required><br><br>
+          <label for="sem4">Semester 4:</label>
+          <input type="text" id="sem4" name="sem4" required><br><br>
+          <label for="sem5">Semester 5:</label>
+          <input type="text" id="sem5" name="sem5" required><br><br>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+      {% endfor %}
+      </tbody>
+      </table>
+      </div>
+      
+      
 
 
     </div>
-<script src="static/js/script.js"></script>
+    <style>
+      .marks-container {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          backdrop-filter: blur(5px);
+          z-index: 9999;
+      }
+  
+      .marks-content {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 300px;
+          padding: 20px;
+          background-color: #fff;
+          border-radius: 10px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          text-align: center;
+      }
+  
+      .student-box {
+          cursor: pointer;
+      }
+  
+      .close-button {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          font-size: 12px;
+          padding: 6px 12px;
+          background-color: #f44336;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+      }
+  
+      .mark {
+          margin-bottom: 10px;
+      }
+  </style>
+    
+    <script>
+      function toggleMarksBox1(usn) {
+          const marksContainer = document.getElementById(usn);
+  
+          // Show the clicked marks container
+          marksContainer.style.display = 'block';
+      }
+  
+      function closeMarksBox(usn) {
+          const marksContainer = document.getElementById(usn);
+          marksContainer.style.display = 'none';
+      }
+  </script>
+  
+<script>
+  function toggleMarksBox(usn) {
+  const marksBox = document.getElementById(`marksBox_${usn}`);
+  marksBox.classList.toggle('show');
+}
+
+function closeMarksBox(usn) {
+  const marksBox = document.getElementById(`marksBox_${usn}`);
+  marksBox.classList.remove('show');
+}
+
+</script>
+<script>
+  
+  function saveNote(noteId) {
+  var noteContent = document.getElementById('note' + noteId).value;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/save-note', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+
+  var data = JSON.stringify({
+    noteId: noteId,
+    content: noteContent
+  });
+
+  xhr.send(data);
+}
+
+
+
+</script>
     </body>
 </html>

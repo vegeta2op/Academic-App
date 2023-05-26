@@ -359,180 +359,65 @@ span #menu {
   margin-right: 30vmin;
 }
 
-.container-2 {
-  width: auto;
-  height: 60%;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: white;
-  border-radius: 10px;
-  overflow: hidden;
-  overflow-y: scroll; /* Hide table overflow */
+.container {
+    max-width: inherit;
+    margin: 0 auto;
+    padding: inherit;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 32px;
 }
 
-.table-container {
-  height: calc(100% - 50px); /* Subtract the height of the form from the container height */
-  overflow-y: auto; /* Add vertical scroll to the table container */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer and Edge */
-}
-.table-container::-webkit-scrollbar {
-  width: 0; /* WebKit-based browsers */
+.student-box {
+    display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 14px 99px 14px 17px;
+gap: 10px;
+
+background: #FFFFFF;
+box-shadow: inset -4px -3px 28px #E5F6FF;
+border-radius: 15px;
+flex: 1; /* Allow the box to adjust based on content size */
 }
 
-
-table {
-  border-collapse: collapse;
-  border-radius: 10px;
-  width: 100%;
-  margin-bottom: 1rem;
-  background-color: #fff;
-  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
-
+.student-box h2 {
+    margin-top: 0;
 }
 
-
-th, td {
-  padding: 0.8em;
-  text-align: left;
+.marks-container {
+    display: flex;
+    flex-wrap: wrap;
 }
 
-th {
-  background-color: #e8ecf1;
-  color: black;
+.mark {
+    width: 100px;
+    padding: 5px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
 }
-tr::nth-child(1) {
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-tr:last-child {
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-
-tr:hover {
-  background-color: #ddd;
-}
-
-td:nth-child(5), td:nth-child(6) {
-  text-align: center;
+.marks-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 20px;
+    display: none;
 }
 
-td:nth-child(5) a {
-  background-color: #04AA6D;
-  color: white;
-  border-radius: 4px;
-  padding: 0.4em 0.8em;
-  text-decoration: none;
+.marks-box h2 {
+    margin-top: 0;
 }
 
-td:nth-child(5) a:hover {
-  background-color: #218c74;
+.marks-container {
+    margin-top: 20px;
 }
 
-td:nth-child(6) input[type="checkbox"] {
-  transform: scale(1.4);
-}
-#myBtn {
-  background-color: #004266;
-  color: cornsilk;
-  border: none;
-  border-radius: 5px;
-  padding: 8px 16px;
-  font-size: 16px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-}
-
-#myBtn:hover {
-  box-shadow: 0 0 10px 5px #527DF3;
-    background-color: #0000B9;
-}
-
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
-
-/* The Close Button */
-.star {
-    visibility:hidden;
-    font-size:30px;
-    cursor:pointer;
-    top: 10px;
-    left: 10px;
-}
-.star:before {
-   content: "\2605";
-   position: absolute;
-   visibility:visible;
-}
-.star:checked:before {
-   content: "\2606";
-   position: absolute;
-}
-form {
-  display: flex;
-  align-items: center;
-}
-
-label {
-  margin-right: 10px;
-}
-
-input[type="text"] {
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-button[type="submit"] {
-  padding: 5px 10px;
-  background-color: #04AA6D;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-button[type="submit"]:hover {
-  background-color: #218c74;
-}
-.marks-content {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  display: none;
-}
-
-.marks-content.show {
-  display: block;
+.mark {
+    margin-bottom: 10px;
 }
