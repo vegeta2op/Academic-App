@@ -17,5 +17,5 @@ Changes
  - > Session login for Teacher .
  - > Only AMC College adderss email 
  - > Fixed Regression Model for Prediction 
- - > A major Update Next month...
+ - > A major Update soon
 
