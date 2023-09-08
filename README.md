@@ -14,8 +14,9 @@
  VER 1.0
  ---
 Changes 
- - > Session login for Teacher .
- - > Only AMC College adderss email 
- - > Fixed Regression Model for Prediction 
- - > A major Update soon
+ -  Session login , password stored in bcrypt
+ -  SQL alchemy implemented with Flask forms 
+ -  Fixed an issue where the marks weren't being Updated  
+ -  Fixed Login and Signup issues where users had multiple instanes of email
+    
 
