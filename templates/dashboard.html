@@ -147,20 +147,35 @@
         <div class="close-button" onclick="closeMarksBox('{{ student.USN }}')" >Close</div>
         <h2>Marks Details</h2>
         <form id="marks-form" method="POST" action="/update-marks" enctype="multipart/form-data">
-          <label for="usn">USN:</label>
-          <input type="text" id="usn" name="usn" required><br><br>
-          <label for="sem1">Semester 1:</label>
-          <input type="text" id="sem1" name="sem1" required><br><br>
-          <label for="sem2">Semester 2:</label>
-          <input type="text" id="sem2" name="sem2" required><br><br>
-          <label for="sem3">Semester 3:</label>
-          <input type="text" id="sem3" name="sem3" required><br><br>
-          <label for="sem4">Semester 4:</label>
-          <input type="text" id="sem4" name="sem4" required><br><br>
-          <label for="sem5">Semester 5:</label>
-          <input type="text" id="sem5" name="sem5" required><br><br>
-          <button type="submit">Submit</button>
+          {{ form.csrf_token }}
+        
+          <label for="usn">{{ form.usn.label }}</label>
+          {{ form.usn }}
+          <br><br>
+        
+          <label for="sem1">{{ form.sem1.label }}</label>
+          {{ form.sem1 }}
+          <br><br>
+        
+          <label for="sem2">{{ form.sem2.label }}</label>
+          {{ form.sem2 }}
+          <br><br>
+        
+          <label for="sem3">{{ form.sem3.label }}</label>
+          {{ form.sem3 }}
+          <br><br>
+        
+          <label for="sem4">{{ form.sem4.label }}</label>
+          {{ form.sem4 }}
+          <br><br>
+        
+          <label for="sem5">{{ form.sem5.label }}</label>
+          {{ form.sem5 }}
+          <br><br>
+        
+          <button type="submit">{{ form.submit.label }}</button>
         </form>
+        
       </div>
       {% endfor %}
       </tbody>
