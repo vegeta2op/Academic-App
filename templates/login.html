@@ -1,136 +1,199 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Academic Progression | Login Menu</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='static/css/main.css'>
-
+    <link rel="stylesheet" href="/static/css/login.css">
+    <script src="/static/js/login.js"></script>
 </head>
 <body>
-  <div id="login-page-container">
-    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" id="my-logo">
-    <div class="login-box">
-      <h2>Login</h2>
-      <form method="POST" action="{{ url_for('login') }}">
-        {{ form.csrf_token }}
-        <div class="user-box">
-          <input type="email" name="email" required="">
-          <label>Username</label>
+    <h1>WELCOME TO MANAGEIT PORTAL</h1>
+    <div class="wrapper">
+        <div class="title-text">
+            <div class="title login">Login</div>
+            <div class="title signup">Signup</div>
         </div>
-        <div class="user-box">
-          <input type="password" name="password" required="">
-          <label>Password</label>
-        </div>
-        <button id="login-btn">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          Login
-        </button>
-        <div class="signup-link">
-          <a href="#" onclick="showSignUpDialog()">Sign up?</a>
-        </div>
-        {% if error_message %}
-          <div id="error_message" class="error_message">
-            {{ error_message }}
-          </div>
-        {% endif %}
-      </form>
-    </div>
-  </div>
+        <div class="form-container">
+            <div class="slide-controls">
+                <input type="radio" name="slide" id="login" checked>
+                <input type="radio" name="slide" id="signup">
+                <label for="login" class="slide login">Login</label>
+                <label for="signup" class="slide signup">Signup</label>
+                <div class="slider-tab"></div>
+            </div>
+            <div class="form-inner">
+                <form action="/" method="post" class="login">
+                    {{ login_form.csrf_token }}
+                    <div class="field">
+                        {{ login_form.email(class="form-control", placeholder="Email Address") }}
 
+                    </div>
+                    <div class="field">
+                        {{ registration_form.password(class="form-control", placeholder="Password") }}
 
-  <!-- Sign up dialog -->
-{% if error_messages %}
-<div id="signup-dialog" class="dialog">
-  <div class="dialog-content">
-    <span class="close" onclick="hideSignUpDialog()">&times;</span>
-    <h2>Sign up</h2>
-    <div class="error-messages">
-      <ul>
-        {% for error_message in error_messages %}
-        <li>{{ error_message }}</li>
-        {% endfor %}
-      </ul>
+                    </div>
+                    
+                    <div class="field btn">
+                        <div class="btn-layer"></div>
+                        <input type="submit" value="Login">
+                    </div>
+                    <div class="signup-link">Not a member? <a href="">Signup now</a></div>
+                </form>
+                <!-- Include your signup form here, but make it non-functional -->
+                <form action="/signup" method="post" class="signup">
+                    {{ registration_form.csrf_token }}
+                    <div class="field">
+                        
+                        {{ registration_form.email(class="form-control", placeholder="Email Address") }}
+                    </div>
+                    <div class="field">
+                        
+                        {{ registration_form.password(class="form-control", placeholder="Password") }}
+                    </div>
+                    <div class="field">
+                        
+                        {{ registration_form.re_password(class="form-control", placeholder="Confirm password") }}
+                    </div>
+                    <div class="field btn">
+                        <div class="btn-layer"></div>
+                        <input type="submit" value="Signup">
+                    </div>
+                </form>
+                
+            </div>
+        </div>
     </div>
-    <form method="POST" action="{{ url_for('signup') }}">
-      {{ form.csrf_token }}
-      <div class="user-box">
-        <label>Email</label>
-        <input type="email" name="email" placeholder="Enter your email address" required="">
+    <div>
+        <input type="checkbox" class="checkbox" id="checkbox">
+        <label for="checkbox" class="checkbox-label">
+          <i class="fas fa-moon"></i>
+          <i class="fas fa-sun"></i>
+          <span class="ball"></span>
+        </label>
       </div>
-      <div class="user-box">
-        <label>Password</label>
-        <input type="password" name="password" placeholder="Enter a password" required="">
-      </div>
-      <div class="user-box">
-        <label>Confirm Password</label>
-        <input type="password" name="re-password" placeholder="Enter a password" required="">
-      </div>
+    
+    <script>
+        function loginUser(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    // Create a JSON object with the email and password
+    const data = { email, password };
+
+    // Send the JSON data to the server using fetch
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(result => {
+        // Handle the response here (e.g., show a message to the user)
+        alert(result.message);
+        
+        if (result.message === 'Login successful') {
+            // Redirect to the dashboard
+            window.location.href = '/dashboard';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+    </script>
+    <script>
+   const checkbox = document.getElementById("checkbox");
+const wrapper = document.querySelector(".wrapper");
+const sliderTab = document.querySelector(".slide-controls .slider-tab");
+const formInputs = document.querySelectorAll(".form-inner form .field:not(.btn) input");
+
+checkbox.addEventListener("change", () => {
+  document.body.classList.toggle("dark");
+  wrapper.classList.toggle("dark");
+
+  // Check if dark mode is active and change the background color of .slider-tab and form inputs accordingly
+  if (document.body.classList.contains("dark")) {
+    sliderTab.style.backgroundColor = "orange";
+    formInputs.forEach((input) => {
+      input.style.backgroundColor = "black";
+    });
+  } else {
+    sliderTab.style.backgroundColor = ""; // Reset to the default background
+    formInputs.forEach((input) => {
+      input.style.backgroundColor = ""; // Reset to the default background
+    });
+  }
+});
+const body = document.body;
+const signupCheckbox = document.getElementById("signup");
+const loginCheckbox = document.getElementById("login");
+const signupLabel = document.querySelector("label.signup");
+const loginLabel = document.querySelector("label.login");
+
+function applyDarkStyles() {
+  if (body.classList.contains("dark")) {
+    if (signupCheckbox.checked) {
+      signupLabel.style.color = "black";
+      loginLabel.style.color = "white";
       
-      <button id="btn-l">Sign up</button>
-    </form>
-  </div>
-</div>
-{% else %}
-<div id="signup-dialog" class="dialog" >
-  <div class="dialog-content">
-    <span class="close" onclick="hideSignUpDialog()">&times;</span>
-    <h2>Sign up</h2>
-    <form method="POST" action="{{ url_for('signup') }}">
-      {{ form.hidden_tag() }}
-      <div class="user-box">
-        <label>Email</label>
-        <input type="email" name="email" placeholder="Enter your email address" required="">
-      </div>
-      <div class="user-box">
-        <label>Password</label>
-        <input type="password" name="password" placeholder="Enter a password" required="">
-      </div>
-      <div class="user-box">
-        <label>Confirm</label>
-        <input type="password" name="re-password" placeholder="Confirm Password" required="">
-      </div>
-      <button id="btn-l">Sign up</button>
-    </form>
-  </div>
-</div>
-{% endif %}
-
-  <script>
-    // Show the sign up dialog when the sign up link is clicked
-    function showSignUpDialog() {
-      document.getElementById("signup-dialog").style.display = "block";
     }
-
-    // Hide the sign up dialog when the close button is clicked
-    function hideSignUpDialog() {
-      document.getElementById("signup-dialog").style.display = "none";
+    if (loginCheckbox.checked) {
+      loginLabel.style.color = "black";
+      signupLabel.style.color = "white";
     }
-   function removeErrorMessage() {
-    var errorMessage = document.getElementById("error_message");
-    if (errorMessage) {
-      errorMessage.classList.add("fade-out");
-      setTimeout(function() {
-        errorMessage.remove();
-      }, 7000); // 7000 milliseconds = 7 seconds
-    }
+  } else {
+    signupLabel.style.color = "";
+    loginLabel.style.color = "";
+    
   }
+}
 
-  // Call the function when the page loads
-  document.addEventListener("DOMContentLoaded", removeErrorMessage);
-  </script>
+signupCheckbox.addEventListener("change", applyDarkStyles);
+loginCheckbox.addEventListener("change", applyDarkStyles);
+
+// Add an event listener to the body element to apply styles when dark mode is toggled
+body.addEventListener("transitionend", applyDarkStyles);
+
+const wrapperTitles = document.querySelectorAll(".wrapper .title");
+
+function applyTitleColor() {
+  if (body.classList.contains("dark")) {
+    wrapperTitles.forEach((title) => {
+      title.style.color = "orangered"; // Change the color of .wrapper .title to orangered
+    });
+  } else {
+    wrapperTitles.forEach((title) => {
+      title.style.color = ""; // Reset to the default color
+    });
+  }
+}
+
+// Add an event listener to the body element to apply title color when dark mode is toggled
+body.addEventListener("transitionend", applyTitleColor);
+
+    </script>
 <script>
-  function showSignUpDialog() {
-    var dialog = document.getElementById("signup-dialog");
-    dialog.style.backdropFilter = "blur(5px)";
-    dialog.style.display = "block";
-  }
-</script>
+    
+const formBtnLayers = document.querySelectorAll("form .btn .btn-layer");
 
-<script src="./static/js/main.js"></script>
+function applyFormBtnLayerBackground() {
+  if (body.classList.contains("dark")) {
+    formBtnLayers.forEach((btnLayer) => {
+      btnLayer.style.background = "-webkit-linear-gradient(right, #c56b05, #d69a01, #db7705, #ea6906)";
+    });
+  } else {
+    formBtnLayers.forEach((btnLayer) => {
+      btnLayer.style.background = ""; // Reset to the default background
+    });
+  }
+}
+
+// Add an event listener to the body element to apply the background when dark mode is toggled
+body.addEventListener("transitionend", applyFormBtnLayerBackground);
+
+</script>
 </body>
 </html>
