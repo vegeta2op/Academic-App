@@ -1,208 +1,861 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Progression</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="static/css/stud.css">
-
-    <script>
-        function toggleMarksBox(usn) {
-            const marksBox = document.getElementById('marksBox');
-            const marksContainer = document.getElementById('marksContainer');
-            
-            // Clear previous marks
-            marksContainer.innerHTML = '';
-            
-            // Find the student object with the matching USN
-            const student = students.find(student => student.USN === usn);
-            
-            if (student) {
-                // Populate marks for the clicked USN
-                for (let i = 0; i < student.marks.length; i++) {
-                    marksContainer.innerHTML += `<div class="mark">Semester ${i + 1}: ${student.marks[i]}</div>`;
-                }
-                
-                // Toggle visibility of the marks box
-                marksBox.style.display = marksBox.style.display === 'none' ? 'block' : 'none';
-            }
-        }
-        </script>
-
-</head>
-<style>
-      table {
-        width: 100%;
-      }
-
-      @media only screen and (max-width: 768px) {
-        table {
-          width: 100%;
-        }
-      }
-
-    </style>
-
-<script>
-    function toggleMenu() {
-        var menuBar = document.getElementById('menuBar');
-        menuBar.classList.toggle('active');
-    }
-</script>
-</head>
-<body>
-  <script>
-    const textarea = document.getElementById('sticky-note');
-    textarea.addEventListener('input', function() {
-      // Get the first line of the textarea
-      const firstLine = this.value.substr(0, this.value.indexOf('\n'));
-      // Set the textarea value to the first line plus the user input
-      this.value = `${firstLine}\n${this.value.substr(this.value.indexOf('\n') + 1)}`;
-    });
-  </script>
-
-    <nav id="menuBar">
-        <ul>
-            <li>
-                <a href="javascript:toggleMenu()">
-                    <img src="static/images/logo.png" width="20px" height="20px" class="logo-menu" >
-                    <span id="menu">Menu</span>
-                </a>
-            </li>
-            <li>
-                <a href="/dashboard">
-                    <img src="/static/images/dash.svg" alt="Dashboard Icon">
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="/students">
-                    <img src="/static/images/students.svg" alt="Students Icon">
-                    <span>Stduents</span>
-                </a>
-            </li>
-            <li>
-                <a href="/predictor">
-                    <img src="/static/images/predict.svg" alt="Predict Icon">
-                    <span>Predictor</span>
-                </a>
-            </li>
-             <li class="profile">
-                  <div class="circle">
-                    <div class="profile-image"></div>
-                  </div>
-                </li>
-              <li class="profile-name">
-                    <div class="profile-n"></div>
-                  <span>{{ session['email'] }}</span>
-                </li>
-                <br><br><br>
-                <br>
-                <br><br><br><br><br><br><br>
-                <br><br><br><br><br><br><br><br>
-               <li class="navbar-divider"></li>
-           <li class="logout" style="margin-top: auto;">
-            <a href="/logout">
-              <div class="logout-icon">
-                <img src="/static/images/logout.svg" alt="Logout Icon">
-              </div>
-              <span class="logout-text">Logout</span>
-            </a>
-          </li>
-
-
-        </ul>
-    </nav>
-    <div style="margin-left:15%;padding:20px 16px;height:1000px;">
-    <br>
-    <h1>Student Information</h1>
-    <div class="container">
-        {% for student in students %}
-        <div class="student-box" onclick="toggleMarksBox('{{ student.USN }}')">
-            <img src="/static/images/profilepic.svg" alt="Dashboard Icon" width="45px" height="45px">
-            <p style="color: black;">{{ student.Name }}</p>
-            <p><strong></strong> 1AM19CS{{ student.USN }}</p>
-        </div>
-        <div id="{{ student.USN }}" class="marks-container">
-            <div class="marks-content">
-                <div class="close-button" onclick="closeMarksBox('{{ student.USN }}')">Close</div>
-                <h2>Marks Details</h2>
-                <div class="mark">Semester 1: {{ student['sem1'] }}</div>
-                <div class="mark">Semester 2: {{ student['sem2'] }}</div>
-                <div class="mark">Semester 3: {{ student['sem3'] }}</div>
-                <div class="mark">Semester 4: {{ student['sem4'] }}</div>
-                <div class="mark">Semester 5: {{ student['sem5'] }}</div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
+    <title>Student Management - Academic Pro</title>
+    
+    <!-- Modern Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        .marks-container {
-            display: none;
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --success-color: #00f2fe;
+            --warning-color: #38f9d7;
+            --danger-color: #fa709a;
+            
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --text-white: #ffffff;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
+            --bg-card: #ffffff;
+            --bg-overlay: rgba(255, 255, 255, 0.95);
+            
+            --border-color: #e2e8f0;
+            --border-radius: 16px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.15);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Sidebar */
+        .sidebar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            backdrop-filter: blur(5px);
-            z-index: 9999;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            overflow-y: auto;
         }
-    
-        .marks-content {
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .sidebar-menu {
+            padding: 24px 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            border-radius: 0 25px 25px 0;
+            margin: 4px 16px 4px 0;
+        }
+
+        .menu-item:hover {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(102, 126, 234, 0.05) 100%);
+            color: var(--primary-color);
+        }
+
+        .menu-item.active {
+            background: var(--primary-gradient);
+            color: var(--text-white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .menu-item i {
+            width: 24px;
+            font-size: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            background: var(--bg-overlay);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .title-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            font-size: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: var(--bg-primary);
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            font-weight: 600;
+        }
+
+        /* Students Content */
+        .students-content {
+            padding: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .students-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+
+        .students-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            width: 350px;
+            padding: 16px 20px 16px 52px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 16px;
+            background: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
             position: absolute;
+            left: 20px;
             top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 18px;
         }
-    
-        .student-box {
-            cursor: pointer;
-        }
-    
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 12px;
-            padding: 6px 12px;
-            background-color: #f44336;
-            color: white;
+
+        .btn {
+            padding: 16px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
         }
-    
-        .mark {
-            margin-bottom: 10px;
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: var(--text-white);
+        }
+
+        .btn-secondary {
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Students Grid */
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .student-card {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .student-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .student-card:hover::before {
+            opacity: 1;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .student-details h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .student-details p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .student-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .student-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-view {
+            background: var(--success-gradient);
+            color: var(--text-white);
+        }
+
+        .btn-predict {
+            background: var(--warning-gradient);
+            color: var(--text-white);
+        }
+
+        .btn-edit {
+            background: var(--secondary-gradient);
+            color: var(--text-white);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Performance Badge */
+        .performance-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .performance-excellent {
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--success-color);
+        }
+
+        .performance-good {
+            background: rgba(56, 249, 215, 0.1);
+            color: var(--warning-color);
+        }
+
+        .performance-average {
+            background: rgba(240, 147, 251, 0.1);
+            color: var(--accent-color);
+        }
+
+        .performance-poor {
+            background: rgba(250, 112, 154, 0.1);
+            color: var(--danger-color);
+        }
+
+        /* Add Student Form */
+        .add-student-form {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            margin-bottom: 32px;
+            display: none;
+        }
+
+        .add-student-form.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 16px;
+            background: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .students-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .students-content {
+                padding: 20px;
+            }
+
+            .students-header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: stretch;
+            }
+
+            .students-actions {
+                flex-direction: column;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .students-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
-    
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">A</div>
+            <div class="logo-text">Academic Pro</div>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a href="/dashboard" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/students" class="menu-item active">
+                <i class="fas fa-users"></i>
+                <span>Students</span>
+            </a>
+            <a href="/predictor" class="menu-item">
+                <i class="fas fa-brain"></i>
+                <span>AI Predictor</span>
+            </a>
+            <a href="/analytics" class="menu-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="/logout" class="menu-item" style="margin-top: auto;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="page-title">
+                <div class="title-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                Student Management
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">{{ session['email'][0].upper() if session['email'] else 'U' }}</div>
+                <span>{{ session['email'] or 'User' }}</span>
+            </div>
+        </header>
+
+        <!-- Students Content -->
+        <div class="students-content">
+            <!-- Students Header -->
+            <div class="students-header">
+                <div>
+                    <h2 style="font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">Students Overview</h2>
+                    <p style="color: var(--text-secondary);">Manage and track academic performance</p>
+                </div>
+                <div class="students-actions">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Search students by name or USN..." id="studentSearch">
+                    </div>
+                    <button class="btn btn-primary" onclick="toggleAddForm()">
+                        <i class="fas fa-plus"></i>
+                        Add Student
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportStudents()">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Add Student Form -->
+            <div class="add-student-form" id="addStudentForm">
+                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 24px; color: var(--text-primary);">Add New Student</h3>
+                <form id="studentForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Student Name</label>
+                            <input type="text" class="form-input" name="name" placeholder="Enter full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">USN</label>
+                            <input type="text" class="form-input" name="usn" placeholder="Enter USN" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Semester 1</label>
+                            <input type="number" class="form-input" name="sem1" min="0" max="100" placeholder="0-100" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Semester 2</label>
+                            <input type="number" class="form-input" name="sem2" min="0" max="100" placeholder="0-100" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Semester 3</label>
+                            <input type="number" class="form-input" name="sem3" min="0" max="100" placeholder="0-100" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Semester 4</label>
+                            <input type="number" class="form-input" name="sem4" min="0" max="100" placeholder="0-100" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Semester 5</label>
+                            <input type="number" class="form-input" name="sem5" min="0" max="100" placeholder="0-100" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Semester 6</label>
+                            <input type="number" class="form-input" name="sem6" min="0" max="100" placeholder="0-100" required>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="toggleAddForm()">
+                            <i class="fas fa-times"></i>
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            Save Student
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Students Grid -->
+            <div class="students-grid" id="studentsGrid">
+                {% for student in students %}
+                <div class="student-card">
+                    {% set avg_grade = (student.sem1 + student.sem2 + student.sem3 + student.sem4 + student.sem5 + student.sem6) / 6 %}
+                    {% if avg_grade >= 90 %}
+                        <span class="performance-badge performance-excellent">Excellent</span>
+                    {% elif avg_grade >= 80 %}
+                        <span class="performance-badge performance-good">Good</span>
+                    {% elif avg_grade >= 70 %}
+                        <span class="performance-badge performance-average">Average</span>
+                    {% else %}
+                        <span class="performance-badge performance-poor">Needs Help</span>
+                    {% endif %}
+                    
+                    <div class="student-info">
+                        <div class="student-avatar">{{ student.Name[0].upper() }}</div>
+                        <div class="student-details">
+                            <h3>{{ student.Name }}</h3>
+                            <p>USN: 1AM19CS{{ student.USN }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="student-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">{{ "%.1f"|format(avg_grade) }}</div>
+                            <div class="stat-label">Average</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">{{ student.sem6 }}</div>
+                            <div class="stat-label">Latest</div>
+                        </div>
+                    </div>
+                    
+                    <div class="student-actions">
+                        <button class="action-btn btn-view" onclick="viewStudent('{{ student.USN }}')">
+                            <i class="fas fa-eye"></i>
+                            View
+                        </button>
+                        <button class="action-btn btn-predict" onclick="predictStudent('{{ student.USN }}')">
+                            <i class="fas fa-brain"></i>
+                            Predict
+                        </button>
+                        <button class="action-btn btn-edit" onclick="editStudent('{{ student.USN }}')">
+                            <i class="fas fa-edit"></i>
+                            Edit
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
     <script>
-        function toggleMarksBox(usn) {
-            const marksContainer = document.getElementById(usn);
-    
-            // Show the clicked marks container
-            marksContainer.style.display = 'block';
+        // Search functionality
+        document.getElementById('studentSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const studentCards = document.querySelectorAll('.student-card');
+            
+            studentCards.forEach(card => {
+                const name = card.querySelector('.student-details h3').textContent.toLowerCase();
+                const usn = card.querySelector('.student-details p').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || usn.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Toggle add form
+        function toggleAddForm() {
+            const form = document.getElementById('addStudentForm');
+            form.classList.toggle('show');
         }
-    
-        function closeMarksBox(usn) {
-            const marksContainer = document.getElementById(usn);
-            marksContainer.style.display = 'none';
+
+        // Add student form submission
+        document.getElementById('studentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const studentData = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('/students/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify(studentData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Student added successfully!');
+                    location.reload();
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        // View student
+        function viewStudent(usn) {
+            window.location.href = `/view/${usn}`;
         }
+
+        // Predict student
+        async function predictStudent(usn) {
+            try {
+                const response = await fetch(`/api/student/${usn}/detailed-prediction`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`Prediction for USN ${usn}:\nNext Semester: ${data.prediction.next_semester}\nConfidence: ${(data.prediction.confidence * 100).toFixed(1)}%`);
+                } else {
+                    alert('Error generating prediction');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Edit student
+        function editStudent(usn) {
+            // For now, redirect to view page
+            window.location.href = `/view/${usn}`;
+        }
+
+        // Export students
+        async function exportStudents() {
+            try {
+                const response = await fetch('/export/students');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const blob = new Blob([data.csv_data], { type: 'text/csv' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = data.filename;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                } else {
+                    alert('Error exporting data');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Add animation on page load
+        window.addEventListener('load', function() {
+            const cards = document.querySelectorAll('.student-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+
+        // Initialize cards with hidden state for animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.student-card');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+        });
     </script>
-    
-    </div>
 </body>
 </html>    

@@ -1,99 +1,837 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Results</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ student.Name }} - Academic Profile | Academic Pro</title>
+    
+    <!-- Modern Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Chart.js for interactive charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@200&display=swap');
-        body {
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --success-color: #00f2fe;
+            --warning-color: #38f9d7;
+            --danger-color: #fa709a;
+            
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --text-white: #ffffff;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
+            --bg-card: #ffffff;
+            
+            --border-color: #e2e8f0;
+            --border-radius: 16px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.15);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
             margin: 0;
-            padding: 20px;
-            font-family: Lexend;
-            background-color: #004266;
-            background-blend-mode: multiply;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-gradient);
+            border-radius: 12px;
+            display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--text-white);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .sidebar-menu {
+            padding: 24px 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            border-radius: 0 25px 25px 0;
+            margin: 4px 16px 4px 0;
+        }
+
+        .menu-item:hover {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(102, 126, 234, 0.05) 100%);
+            color: var(--primary-color);
+        }
+
+        .menu-item i {
+            width: 24px;
+            font-size: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
             min-height: 100vh;
         }
 
-        h1 {
-            color: cornsilk;
-            text-align: center;
+        .top-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .result-container {
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.6);
-            width: auto;
-            height:inherit;
-            padding: 20px;
-            margin-left: auto;
-            margin-bottom: 20px;
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
-            text-align:left;
+        .breadcrumb {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 8px;
         }
 
-        p {
-            margin: 10px 0;
-        }
-
-        .graph-button {
-            background-color: #d61741;
-            border: none;
-            color: cornsilk;
-            padding: 12px 10px;
-            text-align: center;
+        .breadcrumb a {
+            color: var(--primary-color);
             text-decoration: none;
-            display: block;
-            margin: 0 auto;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: font-size 0.3s, color 0.3s;
         }
 
-        .graph-button:hover {
-            box-shadow: 0 0 10px 5px #c51080;
-            background-color: #b61249;
-            font-size: 19px;
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Profile Content */
+        .profile-content {
+            padding: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .student-avatar {
+            width: 100px;
+            height: 100px;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            font-size: 36px;
+            font-weight: 800;
+            box-shadow: var(--shadow-md);
+        }
+
+        .student-details h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .student-id {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-right: 8px;
+        }
+
+        .badge-excellent {
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--success-color);
+        }
+
+        .badge-good {
+            background: rgba(56, 249, 215, 0.1);
+            color: var(--warning-color);
+        }
+
+        .badge-average {
+            background: rgba(240, 147, 251, 0.1);
+            color: var(--accent-color);
+        }
+
+        .badge-poor {
+            background: rgba(250, 112, 154, 0.1);
+            color: var(--danger-color);
+        }
+
+        .action-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 24px 8px 0 0;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: var(--text-white);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 2px solid var(--border-color);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--text-white);
+            margin: 0 auto 16px;
+        }
+
+        .stat-icon.primary { background: var(--primary-gradient); }
+        .stat-icon.success { background: var(--success-gradient); }
+        .stat-icon.warning { background: var(--warning-gradient); }
+        .stat-icon.danger { background: var(--danger-gradient); }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Charts */
+        .chart-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+        }
+
+        /* Performance Table */
+        .performance-table {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+
+        .table-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .grades-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .grades-table th,
+        .grades-table td {
+            padding: 16px 24px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .grades-table th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .chart-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .profile-info {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Results</h1>
-    <div class="result-container">
-        <p>USN:1AM19CS{{ student.USN }}</p>
-        <p>Semester 1: {{ sem1 }}</p>
-        <p>Semester 2: {{ sem2 }}</p>
-        <p>Semester 3: {{ sem3 }}</p>
-        <p>Semester 4: {{ sem4 }}</p>
-        <p>Semester 5: {{ sem5 }}</p>
-        <p>Predicted marks for 6th semester: {{ predicted_marks }}</p>
-        <p>R2 score (testing set): 0.90787887877878</p>
-        <p>Mean squared error (testing set): {{ mse }}</p>
-        <p>Percentage change in marks from 1st to 5th semester: {{ percentage_change }}%</p>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">A</div>
+            <div class="logo-text">Academic Pro</div>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a href="/dashboard" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/students" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Students</span>
+            </a>
+            <a href="/predictor" class="menu-item">
+                <i class="fas fa-brain"></i>
+                <span>AI Predictor</span>
+            </a>
+            <a href="/logout" class="menu-item" style="margin-top: auto;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="breadcrumb">
+                <a href="/dashboard">Dashboard</a> / <a href="/students">Students</a> / {{ student.Name }}
+            </div>
+            <h1 class="page-title">Academic Profile</h1>
+        </header>
+
+        <!-- Profile Content -->
+        <div class="profile-content">
+            <!-- Student Profile Header -->
+            <div class="profile-header">
+                <div class="profile-info">
+                    <div class="student-avatar">
+                        {{ student.Name[0].upper() }}
+                    </div>
+                    
+                    <div class="student-details">
+                        <h1>{{ student.Name }}</h1>
+                        <div class="student-id">USN: 1AM19CS{{ student.USN }}</div>
+                        
+                        {% set avg_grade = (student.sem1 + student.sem2 + student.sem3 + student.sem4 + student.sem5 + student.sem6) / 6 %}
+                        {% if avg_grade >= 90 %}
+                            <span class="badge badge-excellent">Excellent Performance</span>
+                        {% elif avg_grade >= 80 %}
+                            <span class="badge badge-good">Good Performance</span>
+                        {% elif avg_grade >= 70 %}
+                            <span class="badge badge-average">Average Performance</span>
+                        {% else %}
+                            <span class="badge badge-poor">Needs Improvement</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <button class="action-btn btn-primary" onclick="generatePrediction()">
+                    <i class="fas fa-brain"></i>
+                    Generate AI Prediction
+                </button>
+                
+                <button class="action-btn btn-secondary" onclick="exportData()">
+                    <i class="fas fa-download"></i>
+                    Export Data
+                </button>
+            </div>
+
+            <!-- Performance Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-value">{{ "%.1f"|format(avg_grade) }}</div>
+                    <div class="stat-label">Overall Average</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-value">{{ student.sem6 }}</div>
+                    <div class="stat-label">Latest Grade</div>
+                </div>
+                
+                {% set trend = student.sem6 - student.sem1 %}
+                <div class="stat-card">
+                    <div class="stat-icon {{ 'success' if trend > 0 else 'danger' if trend < 0 else 'warning' }}">
+                        <i class="fas fa-{{ 'arrow-up' if trend > 0 else 'arrow-down' if trend < 0 else 'minus' }}"></i>
+                    </div>
+                    <div class="stat-value">{{ "%.1f"|format(trend) }}</div>
+                    <div class="stat-label">Progress Trend</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="stat-value">6</div>
+                    <div class="stat-label">Semesters</div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="chart-section">
+                <!-- Performance Chart -->
+                <div class="chart-card">
+                    <h3 class="chart-title">Academic Performance Trend</h3>
+                    <div style="height: 350px;">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Grade Distribution -->
+                <div class="chart-card">
+                    <h3 class="chart-title">Grade Distribution</h3>
+                    <div style="height: 350px;">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Performance Table -->
+            <div class="performance-table">
+                <div class="table-header">
+                    <h3 class="table-title">Detailed Academic Record</h3>
+                </div>
+                
+                <table class="grades-table">
+                    <thead>
+                        <tr>
+                            <th>Semester</th>
+                            <th>Grade</th>
+                            <th>Performance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sem in ['sem1', 'sem2', 'sem3', 'sem4', 'sem5', 'sem6'] %}
+                        {% set grade = student[sem] %}
+                        <tr>
+                            <td>Semester {{ loop.index }}</td>
+                            <td><strong>{{ grade }}</strong></td>
+                            <td>
+                                {% if grade >= 90 %}
+                                    <span style="color: var(--success-color);">Excellent</span>
+                                {% elif grade >= 80 %}
+                                    <span style="color: var(--warning-color);">Good</span>
+                                {% elif grade >= 70 %}
+                                    <span style="color: var(--accent-color);">Average</span>
+                                {% else %}
+                                    <span style="color: var(--danger-color);">Below Average</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if grade >= 60 %}
+                                    <i class="fas fa-check-circle" style="color: var(--success-color);"></i> Passed
+                                {% else %}
+                                    <i class="fas fa-exclamation-triangle" style="color: var(--danger-color);"></i> Attention Required
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Prediction Modal -->
+    <div class="modal" id="predictionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">AI Performance Prediction</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
     </div>
-    <button class="graph-button" onclick="showGraph()">Show Graph</button>
 
-    <!-- Script for pop-up graph -->
     <script>
-        function showGraph() {
-            // Create a new window to display the graph
-            var graphWindow = window.open('', '', 'width=800,height=600');
+        // Performance Chart
+        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+        const performanceChart = new Chart(performanceCtx, {
+            type: 'line',
+            data: {
+                labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6'],
+                datasets: [{
+                    label: '{{ student.Name }}',
+                    data: [{{ student.sem1 }}, {{ student.sem2 }}, {{ student.sem3 }}, {{ student.sem4 }}, {{ student.sem5 }}, {{ student.sem6 }}],
+                    borderColor: 'rgb(102, 126, 234)',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: 'rgb(102, 126, 234)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 3,
+                    pointRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
 
-            // Get the URL for the graph image
-            var graphURL = "{{ url_for('static', filename=graph_filename) }}";
+        // Distribution Chart
+        const distributionCtx = document.getElementById('distributionChart').getContext('2d');
+        const distributionChart = new Chart(distributionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6'],
+                datasets: [{
+                    data: [{{ student.sem1 }}, {{ student.sem2 }}, {{ student.sem3 }}, {{ student.sem4 }}, {{ student.sem5 }}, {{ student.sem6 }}],
+                    backgroundColor: [
+                        '#667eea',
+                        '#764ba2',
+                        '#f093fb',
+                        '#f5576c',
+                        '#4facfe',
+                        '#00f2fe'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
 
-            // Generate the HTML for the graph image
-            var graphHTML = '<html><head><title>Scatter Plot</title></head><body>';
-            graphHTML += '<img src="' + graphURL + '" alt="Scatter Plot">';
-            graphHTML += '</body></html>';
+        // Generate Prediction
+        async function generatePrediction() {
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            btn.disabled = true;
 
-            // Display the graph image in the new window
-            graphWindow.document.write(graphHTML);
+            try {
+                const response = await fetch(`/api/student/{{ student.USN }}/detailed-prediction`);
+                const data = await response.json();
+
+                if (data.success) {
+                    showPredictionModal(data);
+                } else {
+                    alert('Error: ' + (data.error || 'Unable to generate prediction'));
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         }
+
+        // Show Prediction Modal
+        function showPredictionModal(data) {
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <div class="stats-grid" style="margin-bottom: 24px;">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="stat-value">${data.prediction.next_semester}</div>
+                        <div class="stat-label">Predicted Grade</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon success">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-value">${(data.prediction.confidence * 100).toFixed(1)}%</div>
+                        <div class="stat-label">Confidence</div>
+                    </div>
+                </div>
+                
+                ${data.insights ? `
+                    <div style="background: var(--bg-secondary); padding: 20px; border-radius: 12px;">
+                        <h4 style="margin-bottom: 12px;">AI Insights:</h4>
+                        ${data.insights.academic_insights ? data.insights.academic_insights.map(insight => `<p style="margin: 8px 0;">• ${insight}</p>`).join('') : '<p>No insights available.</p>'}
+                    </div>
+                ` : ''}
+            `;
+
+            document.getElementById('predictionModal').classList.add('show');
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('predictionModal').classList.remove('show');
+        }
+
+        // Export Data
+        function exportData() {
+            const studentData = {
+                name: "{{ student.Name }}",
+                usn: "{{ student.USN }}",
+                sem1: {{ student.sem1 }},
+                sem2: {{ student.sem2 }},
+                sem3: {{ student.sem3 }},
+                sem4: {{ student.sem4 }},
+                sem5: {{ student.sem5 }},
+                sem6: {{ student.sem6 }},
+                average: {{ "%.2f"|format(avg_grade) }}
+            };
+            
+            const csvContent = "Name,USN,Sem1,Sem2,Sem3,Sem4,Sem5,Sem6,Average\n" +
+                studentData.name + "," + studentData.usn + "," + 
+                studentData.sem1 + "," + studentData.sem2 + "," + studentData.sem3 + "," +
+                studentData.sem4 + "," + studentData.sem5 + "," + studentData.sem6 + "," +
+                studentData.average;
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = studentData.name + "_academic_record.csv";
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('predictionModal').addEventListener('click', (e) => {
+            if (e.target.id === 'predictionModal') {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>

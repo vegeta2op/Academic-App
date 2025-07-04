@@ -1,160 +1,1096 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Progression</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="static/css/predictor.css">
+    <title>AI Predictor - Academic Performance</title>
+    
+    <!-- Modern Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Chart.js for interactive charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    
     <style>
-      table {
-        width: 100%;
-      }
-
-      @media only screen and (max-width: 768px) {
-        table {
-          width: 100%;
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --success-color: #00f2fe;
+            --warning-color: #38f9d7;
+            --danger-color: #fa709a;
+            
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --text-white: #ffffff;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
+            --bg-card: #ffffff;
+            --bg-overlay: rgba(255, 255, 255, 0.95);
+            
+            --border-color: #e2e8f0;
+            --border-radius: 16px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.15);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-      }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Sidebar (matching dashboard) */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .sidebar-menu {
+            padding: 24px 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            border-radius: 0 25px 25px 0;
+            margin: 4px 16px 4px 0;
+        }
+
+        .menu-item:hover {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(102, 126, 234, 0.05) 100%);
+            color: var(--primary-color);
+        }
+
+        .menu-item.active {
+            background: var(--primary-gradient);
+            color: var(--text-white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .menu-item i {
+            width: 24px;
+            font-size: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            background: var(--bg-overlay);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .title-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            font-size: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: var(--bg-primary);
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            font-weight: 600;
+        }
+
+        /* Predictor Content */
+        .predictor-content {
+            padding: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .predictor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .prediction-card {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .prediction-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--text-white);
+        }
+
+        .card-icon.batch { background: var(--primary-gradient); }
+        .card-icon.manual { background: var(--secondary-gradient); }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 16px;
+            background: var(--bg-primary);
+            transition: var(--transition);
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: var(--text-white);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-loading {
+            position: relative;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Results Section */
+        .results-section {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            margin-bottom: 32px;
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 24px;
+        }
+
+        .results-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .result-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .result-value {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .result-value.prediction { color: var(--primary-color); }
+        .result-value.confidence { color: var(--success-color); }
+        .result-value.risk { color: var(--danger-color); }
+
+        .result-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Students List */
+        .students-list {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .list-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .list-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            width: 300px;
+            padding: 12px 16px 12px 44px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 14px;
+            background: var(--bg-secondary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .students-table th,
+        .students-table td {
+            padding: 16px 32px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .students-table th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            font-weight: 600;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-right: 8px;
+        }
+
+        .btn-predict {
+            background: var(--primary-gradient);
+            color: var(--text-white);
+        }
+
+        .btn-view {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .predictor-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .predictor-content {
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .search-input {
+                width: 200px;
+            }
+        }
     </style>
 </head>
 <body>
-  
-
-    <nav id="menuBar">
-        <ul>
-            <li>
-                <a href="javascript:toggleMenu()">
-                    <img src="static/images/logo.png" width="20px" height="20px" class="logo-menu" >
-                    <span id="menu">Menu</span>
-                </a>
-            </li>
-            <li>
-                <a href="/dashboard">
-                    <img src="/static/images/dash.svg" alt="Dashboard Icon">
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="/students">
-                    <img src="/static/images/students.svg" alt="Students Icon">
-                    <span>Stduents</span>
-                </a>
-            </li>
-            <li>
-                <a href="/predictor">
-                    <img src="/static/images/predict.svg" alt="Predict Icon">
-                    <span>Predictor</span>
-                </a>
-            </li>
-             <li class="profile">
-                  <div class="circle">
-                    <div class="profile-image"></div>
-                  </div>
-                </li>
-              <li class="profile-name">
-                    <div class="profile-n"></div>
-                  <span>{{ session['email'] }}</span>
-                </li>
-                <br><br><br>
-                <br>
-                <br><br><br><br><br><br><br>
-                <br><br><br><br><br><br><br><br>
-               <li class="navbar-divider"></li>
-           <li class="logout" style="margin-top: auto;">
-            <a href="/logout">
-              <div class="logout-icon">
-                <img src="/static/images/logout.svg" alt="Logout Icon">
-              </div>
-              <span class="logout-text">Logout</span>
-            </a>
-          </li>
-
-
-        </ul>
-    </nav>
-    <div style="margin-left: 15%; padding: 20px 16px; height: 1000px;">
-      <h1>PREDICTOR</h1>
-      <form id="searchForm">
-        <label for="searchInput">Search by USN or Name</label>
-        <input class="form-control" id="searchInput" type="text" placeholder="Enter your search query">
-      </form>
-    
-      <div class="container-2" style="width: auto; height: 60%; margin: 0 auto; padding: 20px; background-color: white; border-radius: 10px;">
-        <h1>List of Students</h1>
-        <div class="table-container">
-          <table class="table" id="studentsTable">
-            <thead>
-              <tr>
-                <th id="first-th">Name</th>
-                <th>USN</th>
-                <th>Class</th>
-                <th id="last-th">View</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for student in students %}
-              <tr>
-                <td>{{ student.Name }}</td>
-                <td>1AM19CS{{ student.USN }}</td>
-                <td>6Th Sem</td>
-                <td>
-                  <a href="/view/{{ student.USN }}" class="btn btn-primary my-btn" style="display: inline-block; padding: 5px 10px; border: 1px solid #36B5EB; border-radius: 5px; background-color: #36B5EB; color: white; text-decoration: none;">View</a>
-                </td>                
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">A</div>
+            <div class="logo-text">Academic Pro</div>
         </div>
-      </div>
+        
+        <nav class="sidebar-menu">
+            <a href="/dashboard" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/students" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Students</span>
+            </a>
+            <a href="/predictor" class="menu-item active">
+                <i class="fas fa-brain"></i>
+                <span>AI Predictor</span>
+            </a>
+            <a href="/analytics" class="menu-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="/logout" class="menu-item" style="margin-top: auto;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="title-icon">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h1 class="page-title">AI Performance Predictor</h1>
+            <div class="user-profile">
+                <div class="user-avatar">{{ session['email'][0].upper() if session['email'] else 'U' }}</div>
+                <span>{{ session['email'] or 'User' }}</span>
+            </div>
+        </header>
+
+        <!-- Predictor Content -->
+        <div class="predictor-content">
+            <!-- Prediction Methods -->
+            <div class="predictor-grid">
+                <!-- Batch Prediction -->
+                <div class="prediction-card">
+                    <div class="card-header">
+                        <div class="card-icon batch">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <h3 class="card-title">Batch Prediction</h3>
+                        </div>
+                    </div>
+                    <p class="card-description">
+                        Generate predictions for all students at once using our ensemble ML models. Perfect for bulk analysis and reporting.
+                    </p>
+                    
+                    <form id="batchPredictionForm">
+                        <div class="form-group">
+                            <label class="form-label">Prediction Model</label>
+                            {{ prediction_form.model_type(class="form-select") }}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Confidence Threshold</label>
+                            {{ prediction_form.confidence_threshold(class="form-select") }}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-magic"></i>
+                            Generate Batch Predictions
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Manual Prediction -->
+                <div class="prediction-card">
+                    <div class="card-header">
+                        <div class="card-icon manual">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div>
+                            <h3 class="card-title">Manual Prediction</h3>
+                        </div>
+                    </div>
+                    <p class="card-description">
+                        Input student grades manually to get instant predictions with confidence scores and performance insights.
+                    </p>
+                    
+                    <form id="manualPredictionForm">
+                        <div class="form-group">
+                            <label class="form-label">Student Name</label>
+                            {{ manual_form.name(class="form-input", placeholder="Enter student name") }}
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Semester 1</label>
+                                {{ manual_form.sem1(class="form-input", placeholder="0-100") }}
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Semester 2</label>
+                                {{ manual_form.sem2(class="form-input", placeholder="0-100") }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Semester 3</label>
+                                {{ manual_form.sem3(class="form-input", placeholder="0-100") }}
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Semester 4</label>
+                                {{ manual_form.sem4(class="form-input", placeholder="0-100") }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Semester 5</label>
+                            {{ manual_form.sem5(class="form-input", placeholder="0-100") }}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Model</label>
+                            {{ manual_form.model_type(class="form-select") }}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-calculator"></i>
+                            Predict Performance
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection">
+                <div class="results-header">
+                    <h3 class="results-title">Prediction Results</h3>
+                </div>
+                
+                <div class="results-grid" id="resultsGrid">
+                    <!-- Results will be populated by JavaScript -->
+                </div>
+                
+                <div id="resultsChart" style="height: 400px;">
+                    <canvas id="predictionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Students List -->
+            <div class="students-list">
+                <div class="list-header">
+                    <h3 class="list-title">Students Available for Prediction</h3>
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Search students..." id="studentSearch">
+                    </div>
+                </div>
+
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>USN</th>
+                            <th>Current Average</th>
+                            <th>Last Grade</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        {% for student in students %}
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">{{ student.Name[0].upper() }}</div>
+                                    <div>
+                                        <h4>{{ student.Name }}</h4>
+                                        <p style="font-size: 12px; color: var(--text-muted);">Student ID: {{ student.USN }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>1AM19CS{{ student.USN }}</td>
+                            <td>{{ "%.1f"|format((student.sem1 + student.sem2 + student.sem3 + student.sem4 + student.sem5) / 5) }}</td>
+                            <td>{{ student.sem5 }}</td>
+                            <td>
+                                <button class="action-btn btn-predict" onclick="predictSingleStudent('{{ student.USN }}', '{{ student.Name }}')">
+                                    <i class="fas fa-brain"></i> Predict
+                                </button>
+                                <button class="action-btn btn-view" onclick="viewStudent('{{ student.USN }}')">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Prediction Modal -->
+    <div class="modal" id="predictionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Prediction Details</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalContent">
+                <!-- Modal content will be populated by JavaScript -->
+            </div>
+        </div>
     </div>
-    
-    
-  
-<script>
-// Using JavaScript
-document.getElementById("searchForm").addEventListener("submit", function(event) {
-  event.preventDefault(); // Prevent form submission
-  searchTable(); // Call the searchTable function
-});
 
-// Using jQuery
-$("#searchForm").submit(function(event) {
-  event.preventDefault(); // Prevent form submission
-  searchTable(); // Call the searchTable function
-});
+    <script>
+        // CSRF Token
+        const csrfToken = '{{ csrf_token() }}';
 
-</script>
-<script>
-  document.getElementById("searchForm").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent form submission
-    searchTable(); // Call the searchTable function
-  });
+        // Batch Prediction Form
+        document.getElementById('batchPredictionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.classList.add('btn-loading');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            
+            try {
+                const formData = new FormData(e.target);
+                const response = await fetch('/predict/batch', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showBatchResults(data);
+                } else {
+                    alert('Error: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                btn.classList.remove('btn-loading');
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        });
 
-  document.getElementById("searchInput").addEventListener("input", function() {
-    searchTable(); // Call the searchTable function
-  });
+        // Manual Prediction Form
+        document.getElementById('manualPredictionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.classList.add('btn-loading');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Predicting...';
+            
+            try {
+                const formData = new FormData(e.target);
+                const response = await fetch('/predict/manual', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showManualResults(data);
+                } else {
+                    alert('Error: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                btn.classList.remove('btn-loading');
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        });
 
-  function searchTable() {
-    var input = document.getElementById("searchInput").value.toLowerCase(); // Get the search query
-    var table = document.getElementById("studentsTable"); // Get the table element
-    var rows = table.getElementsByTagName("tr"); // Get all table rows
+        // Show Batch Results
+        function showBatchResults(data) {
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsGrid = document.getElementById('resultsGrid');
+            
+            resultsGrid.innerHTML = `
+                <div class="result-card">
+                    <div class="result-value prediction">${data.total}</div>
+                    <div class="result-label">Students Predicted</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value confidence">${(data.confidence_threshold * 100)}%</div>
+                    <div class="result-label">Confidence Threshold</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">${data.model_used}</div>
+                    <div class="result-label">Model Used</div>
+                </div>
+            `;
+            
+            resultsSection.classList.add('show');
+            
+            // Create chart
+            createPredictionChart(data.predictions);
+        }
 
-    for (var i = 1; i < rows.length; i++) { // Start from 1 to skip the header row
-      var name = rows[i].getElementsByTagName("td")[0].innerText.toLowerCase(); // Get the name column value
-      var usn = rows[i].getElementsByTagName("td")[1].innerText.toLowerCase(); // Get the USN column value
+        // Show Manual Results
+        function showManualResults(data) {
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsGrid = document.getElementById('resultsGrid');
+            
+            resultsGrid.innerHTML = `
+                <div class="result-card">
+                    <div class="result-value prediction">${data.prediction}</div>
+                    <div class="result-label">Predicted Grade</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value confidence">${(data.confidence * 100).toFixed(1)}%</div>
+                    <div class="result-label">Confidence Score</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">${data.model_used}</div>
+                    <div class="result-label">Model Used</div>
+                </div>
+            `;
+            
+            resultsSection.classList.add('show');
+            
+            // Show insights
+            if (data.insights && data.insights.length > 0) {
+                const insightsHTML = data.insights.map(insight => `<p style="margin: 8px 0;">${insight}</p>`).join('');
+                resultsGrid.innerHTML += `
+                    <div class="result-card" style="grid-column: 1 / -1;">
+                        <div class="result-label">AI Insights</div>
+                        <div style="margin-top: 12px; text-align: left;">${insightsHTML}</div>
+                    </div>
+                `;
+            }
+        }
 
-      // Check if the search query matches the name or USN
-      if (name.includes(input) || usn.includes(input)) {
-        rows[i].style.display = ""; // Show the row
-      } else {
-        rows[i].style.display = "none"; // Hide the row
-      }
-    }
-  }
-</script>
+        // Create Prediction Chart
+        function createPredictionChart(predictions) {
+            const ctx = document.getElementById('predictionChart').getContext('2d');
+            
+            const grades = predictions.map(p => p.predicted_grade);
+            const names = predictions.map(p => p.name);
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: names.slice(0, 10), // Show top 10
+                    datasets: [{
+                        label: 'Predicted Grades',
+                        data: grades.slice(0, 10),
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                        borderColor: 'rgb(102, 126, 234)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // Predict Single Student
+        async function predictSingleStudent(usn, name) {
+            try {
+                const response = await fetch(`/api/student/${usn}/detailed-prediction`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const modalContent = document.getElementById('modalContent');
+                    modalContent.innerHTML = `
+                        <h4 style="margin-bottom: 16px;">${name} (USN: ${usn})</h4>
+                        
+                        <div class="results-grid" style="margin-bottom: 24px;">
+                            <div class="result-card">
+                                <div class="result-value prediction">${data.prediction.next_semester}</div>
+                                <div class="result-label">Predicted Grade</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-value confidence">${(data.prediction.confidence * 100).toFixed(1)}%</div>
+                                <div class="result-label">Confidence</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="result-value ${data.analytics.risk_level === 'high' ? 'risk' : 'confidence'}">${data.analytics.risk_level}</div>
+                                <div class="result-label">Risk Level</div>
+                            </div>
+                        </div>
+                        
+                        ${data.insights ? `
+                            <div style="background: var(--bg-secondary); padding: 20px; border-radius: 12px;">
+                                <h5 style="margin-bottom: 12px;">AI Insights:</h5>
+                                ${data.insights.academic_insights.map(insight => `<p style="margin: 8px 0;">${insight}</p>`).join('')}
+                            </div>
+                        ` : ''}
+                    `;
+                    
+                    document.getElementById('predictionModal').classList.add('show');
+                } else {
+                    alert('Error: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // View Student
+        function viewStudent(usn) {
+            window.location.href = `/view/${usn}`;
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('predictionModal').classList.remove('show');
+        }
+
+        // Student Search
+        document.getElementById('studentSearch').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#studentsTableBody tr');
+            
+            rows.forEach(row => {
+                const studentName = row.querySelector('h4').textContent.toLowerCase();
+                const studentUSN = row.querySelector('p').textContent.toLowerCase();
+                
+                if (studentName.includes(searchTerm) || studentUSN.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('predictionModal').addEventListener('click', (e) => {
+            if (e.target.id === 'predictionModal') {
+                closeModal();
+            }
+        });
+    </script>
 </body>
 </html>

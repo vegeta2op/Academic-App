@@ -1,199 +1,790 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="/static/css/login.css">
-    <script src="/static/js/login.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Pro - Secure Login</title>
+    
+    <!-- Modern Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --accent-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --success-color: #00f2fe;
+            --error-color: #ff6b9d;
+            
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --text-white: #ffffff;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
+            --bg-glass: rgba(255, 255, 255, 0.25);
+            --bg-overlay: rgba(0, 0, 0, 0.1);
+            
+            --border-color: #e2e8f0;
+            --border-radius: 16px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 35px 60px rgba(0, 0, 0, 0.2);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: all 0.15s ease-out;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                rgba(102, 126, 234, 0.1) 0%, 
+                rgba(118, 75, 162, 0.1) 25%, 
+                rgba(240, 147, 251, 0.1) 50%, 
+                rgba(245, 87, 108, 0.1) 75%, 
+                rgba(102, 126, 234, 0.1) 100%);
+            animation: gradientMove 8s ease-in-out infinite;
+        }
+
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 70%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 40%;
+            left: 80%;
+            animation-delay: 4s;
+        }
+
+        @keyframes gradientMove {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
+
+        /* Main Container */
+        .login-container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 48px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 24px 24px 0 0;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header */
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 36px;
+            color: var(--text-white);
+            font-weight: 800;
+            box-shadow: var(--shadow-md);
+            animation: logoScale 2s ease-in-out infinite;
+        }
+
+        @keyframes logoScale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .login-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-white);
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-subtitle {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+        }
+
+        /* Form Styles */
+        .login-form {
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-white);
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .form-input-container {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px 16px 52px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: var(--text-white);
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-input:focus {
+            border-color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .form-input:focus + .form-icon {
+            color: var(--text-white);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 18px;
+            transition: var(--transition);
+        }
+
+        .password-toggle:hover {
+            color: var(--text-white);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Password Strength Meter */
+        .password-strength {
+            margin-top: 8px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .password-strength.active {
+            opacity: 1;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--error-color);
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+
+        .strength-bar.weak { width: 25%; background: #ff6b9d; }
+        .strength-bar.fair { width: 50%; background: #ffd93d; }
+        .strength-bar.good { width: 75%; background: #6bcf7f; }
+        .strength-bar.strong { width: 100%; background: var(--success-color); }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 18px 24px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            color: var(--text-white);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn.loading {
+            pointer-events: none;
+        }
+
+        .submit-btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Form Toggle */
+        .form-toggle {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: var(--transition);
+        }
+
+        .toggle-btn:hover {
+            color: var(--text-white);
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideDown 0.3s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 4px;
+        }
+
+        .alert-success {
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--success-color);
+        }
+
+        .alert-success::before {
+            background: var(--success-color);
+        }
+
+        .alert-error {
+            background: rgba(255, 107, 157, 0.1);
+            color: var(--error-color);
+        }
+
+        .alert-error::before {
+            background: var(--error-color);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Footer */
+        .login-footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        .footer-links {
+            margin-top: 16px;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            margin: 0 12px;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            color: var(--text-white);
+        }
+
+        /* Security Features */
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--success-color);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 16px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-card {
+                padding: 32px 24px;
+                margin: 20px;
+                border-radius: 20px;
+            }
+
+            .logo {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .login-title {
+                font-size: 28px;
+            }
+
+            .form-input {
+                padding: 14px 18px 14px 48px;
+            }
+
+            .submit-btn {
+                padding: 16px 20px;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .login-card {
+                background: rgba(26, 32, 44, 0.25);
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>WELCOME TO MANAGEIT PORTAL</h1>
-    <div class="wrapper">
-        <div class="title-text">
-            <div class="title login">Login</div>
-            <div class="title signup">Signup</div>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
         </div>
-        <div class="form-container">
-            <div class="slide-controls">
-                <input type="radio" name="slide" id="login" checked>
-                <input type="radio" name="slide" id="signup">
-                <label for="login" class="slide login">Login</label>
-                <label for="signup" class="slide signup">Signup</label>
-                <div class="slider-tab"></div>
+    </div>
+
+    <!-- Main Login Container -->
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Header -->
+            <div class="login-header">
+                <div class="logo">A</div>
+                <h1 class="login-title">Academic Pro</h1>
+                <p class="login-subtitle">Secure access to your academic dashboard</p>
             </div>
-            <div class="form-inner">
-                <form action="/" method="post" class="login">
-                    {{ login_form.csrf_token }}
-                    <div class="field">
-                        {{ login_form.email(class="form-control", placeholder="Email Address") }}
 
-                    </div>
-                    <div class="field">
-                        {{ registration_form.password(class="form-control", placeholder="Password") }}
+            <!-- Alert Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">
+                            <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' }}"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 
-                    </div>
-                    
-                    <div class="field btn">
-                        <div class="btn-layer"></div>
-                        <input type="submit" value="Login">
-                    </div>
-                    <div class="signup-link">Not a member? <a href="">Signup now</a></div>
-                </form>
-                <!-- Include your signup form here, but make it non-functional -->
-                <form action="/signup" method="post" class="signup">
-                    {{ registration_form.csrf_token }}
-                    <div class="field">
-                        
-                        {{ registration_form.email(class="form-control", placeholder="Email Address") }}
-                    </div>
-                    <div class="field">
-                        
-                        {{ registration_form.password(class="form-control", placeholder="Password") }}
-                    </div>
-                    <div class="field">
-                        
-                        {{ registration_form.re_password(class="form-control", placeholder="Confirm password") }}
-                    </div>
-                    <div class="field btn">
-                        <div class="btn-layer"></div>
-                        <input type="submit" value="Signup">
-                    </div>
-                </form>
+            <!-- Login Form -->
+            <form class="login-form" method="POST" id="loginForm">
+                {{ form.hidden_tag() }}
                 
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label class="form-label">{{ form.email.label.text }}</label>
+                    <div class="form-input-container">
+                        {{ form.email(class="form-input", placeholder="Enter your email", autocomplete="email") }}
+                        <i class="fas fa-envelope form-icon"></i>
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label class="form-label">{{ form.password.label.text }}</label>
+                    <div class="form-input-container">
+                        {{ form.password(class="form-input", placeholder="Enter your password", autocomplete="current-password") }}
+                        <i class="fas fa-lock form-icon"></i>
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                            <i class="fas fa-eye" id="passwordToggleIcon"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span id="submitText">Sign In Securely</span>
+                </button>
+
+                <!-- Form Toggle -->
+                <div class="form-toggle">
+                    <button type="button" class="toggle-btn" onclick="toggleForm()">
+                        <span id="toggleText">Need an account? Sign up here</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Security Badge -->
+            <div class="login-footer">
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secured with enterprise-grade encryption</span>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                    <a href="#" class="footer-link">Help Center</a>
+                </div>
+                
+                <p style="margin-top: 16px;">© 2024 Academic Pro. All rights reserved.</p>
             </div>
         </div>
     </div>
-    <div>
-        <input type="checkbox" class="checkbox" id="checkbox">
-        <label for="checkbox" class="checkbox-label">
-          <i class="fas fa-moon"></i>
-          <i class="fas fa-sun"></i>
-          <span class="ball"></span>
-        </label>
-      </div>
-    
+
     <script>
-        function loginUser(event) {
-    event.preventDefault(); // Prevent the default form submission
+        let isLogin = true;
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    // Create a JSON object with the email and password
-    const data = { email, password };
-
-    // Send the JSON data to the server using fetch
-    fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    })
-    .then(response => response.json())
-    .then(result => {
-        // Handle the response here (e.g., show a message to the user)
-        alert(result.message);
-        
-        if (result.message === 'Login successful') {
-            // Redirect to the dashboard
-            window.location.href = '/dashboard';
+        // Password visibility toggle
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.getElementById('passwordToggleIcon');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.className = 'fas fa-eye';
+            }
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
 
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthContainer = document.getElementById('passwordStrength');
+            
+            if (password.length === 0) {
+                strengthContainer.classList.remove('active');
+                return;
+            }
+            
+            strengthContainer.classList.add('active');
+            
+            let strength = 0;
+            
+            // Length check
+            if (password.length >= 8) strength++;
+            
+            // Contains uppercase
+            if (/[A-Z]/.test(password)) strength++;
+            
+            // Contains lowercase
+            if (/[a-z]/.test(password)) strength++;
+            
+            // Contains numbers
+            if (/\d/.test(password)) strength++;
+            
+            // Contains special characters
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+            
+            // Update strength bar
+            strengthBar.className = 'strength-bar';
+            if (strength <= 1) {
+                strengthBar.classList.add('weak');
+            } else if (strength <= 2) {
+                strengthBar.classList.add('fair');
+            } else if (strength <= 3) {
+                strengthBar.classList.add('good');
+            } else {
+                strengthBar.classList.add('strong');
+            }
+        }
+
+        // Form toggle between login and signup
+        function toggleForm() {
+            const form = document.getElementById('loginForm');
+            const submitBtn = document.getElementById('submitText');
+            const toggleText = document.getElementById('toggleText');
+            const title = document.querySelector('.login-title');
+            const subtitle = document.querySelector('.login-subtitle');
+            
+            isLogin = !isLogin;
+            
+            if (isLogin) {
+                submitBtn.textContent = 'Sign In Securely';
+                toggleText.textContent = 'Need an account? Sign up here';
+                title.textContent = 'Academic Pro';
+                subtitle.textContent = 'Secure access to your academic dashboard';
+                form.action = '/login';
+            } else {
+                submitBtn.textContent = 'Create Account';
+                toggleText.textContent = 'Already have an account? Sign in';
+                title.textContent = 'Join Academic Pro';
+                subtitle.textContent = 'Start your academic journey today';
+                form.action = '/register';
+            }
+        }
+
+        // Form submission with loading state
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            
+            submitBtn.classList.add('loading');
+            submitText.style.opacity = '0';
+            
+            // Re-enable after 3 seconds if no response
+            setTimeout(() => {
+                submitBtn.classList.remove('loading');
+                submitText.style.opacity = '1';
+            }, 3000);
+        });
+
+        // Password strength monitoring
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordField = document.getElementById('password');
+            
+            if (passwordField) {
+                passwordField.addEventListener('input', function() {
+                    checkPasswordStrength(this.value);
+                });
+            }
+            
+            // Add input animations
+            const inputs = document.querySelectorAll('.form-input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'scale(1.02)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'scale(1)';
+                });
+            });
+        });
+
+        // Auto-hide alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.animation = 'slideUp 0.3s ease-out forwards';
+                    alert.addEventListener('animationend', () => {
+                        alert.remove();
+                    });
+                }, 5000);
+            });
+        });
+
+        // Add parallax effect to background shapes
+        document.addEventListener('mousemove', function(e) {
+            const shapes = document.querySelectorAll('.shape');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            shapes.forEach((shape, index) => {
+                const speed = (index + 1) * 0.5;
+                shape.style.transform = `translate(${x * speed * 10}px, ${y * speed * 10}px)`;
+            });
+        });
     </script>
-    <script>
-   const checkbox = document.getElementById("checkbox");
-const wrapper = document.querySelector(".wrapper");
-const sliderTab = document.querySelector(".slide-controls .slider-tab");
-const formInputs = document.querySelectorAll(".form-inner form .field:not(.btn) input");
-
-checkbox.addEventListener("change", () => {
-  document.body.classList.toggle("dark");
-  wrapper.classList.toggle("dark");
-
-  // Check if dark mode is active and change the background color of .slider-tab and form inputs accordingly
-  if (document.body.classList.contains("dark")) {
-    sliderTab.style.backgroundColor = "orange";
-    formInputs.forEach((input) => {
-      input.style.backgroundColor = "black";
-    });
-  } else {
-    sliderTab.style.backgroundColor = ""; // Reset to the default background
-    formInputs.forEach((input) => {
-      input.style.backgroundColor = ""; // Reset to the default background
-    });
-  }
-});
-const body = document.body;
-const signupCheckbox = document.getElementById("signup");
-const loginCheckbox = document.getElementById("login");
-const signupLabel = document.querySelector("label.signup");
-const loginLabel = document.querySelector("label.login");
-
-function applyDarkStyles() {
-  if (body.classList.contains("dark")) {
-    if (signupCheckbox.checked) {
-      signupLabel.style.color = "black";
-      loginLabel.style.color = "white";
-      
-    }
-    if (loginCheckbox.checked) {
-      loginLabel.style.color = "black";
-      signupLabel.style.color = "white";
-    }
-  } else {
-    signupLabel.style.color = "";
-    loginLabel.style.color = "";
-    
-  }
-}
-
-signupCheckbox.addEventListener("change", applyDarkStyles);
-loginCheckbox.addEventListener("change", applyDarkStyles);
-
-// Add an event listener to the body element to apply styles when dark mode is toggled
-body.addEventListener("transitionend", applyDarkStyles);
-
-const wrapperTitles = document.querySelectorAll(".wrapper .title");
-
-function applyTitleColor() {
-  if (body.classList.contains("dark")) {
-    wrapperTitles.forEach((title) => {
-      title.style.color = "orangered"; // Change the color of .wrapper .title to orangered
-    });
-  } else {
-    wrapperTitles.forEach((title) => {
-      title.style.color = ""; // Reset to the default color
-    });
-  }
-}
-
-// Add an event listener to the body element to apply title color when dark mode is toggled
-body.addEventListener("transitionend", applyTitleColor);
-
-    </script>
-<script>
-    
-const formBtnLayers = document.querySelectorAll("form .btn .btn-layer");
-
-function applyFormBtnLayerBackground() {
-  if (body.classList.contains("dark")) {
-    formBtnLayers.forEach((btnLayer) => {
-      btnLayer.style.background = "-webkit-linear-gradient(right, #c56b05, #d69a01, #db7705, #ea6906)";
-    });
-  } else {
-    formBtnLayers.forEach((btnLayer) => {
-      btnLayer.style.background = ""; // Reset to the default background
-    });
-  }
-}
-
-// Add an event listener to the body element to apply the background when dark mode is toggled
-body.addEventListener("transitionend", applyFormBtnLayerBackground);
-
-</script>
 </body>
 </html>

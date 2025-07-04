@@ -1,283 +1,1044 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Progression</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="static/css/dash.css">
-
-
-<style>
-      table {
-        width: 100%;
-      }
-
-      @media only screen and (max-width: 768px) {
-        table {
-          width: 100%;
+    <title>Academic Performance Dashboard</title>
+    
+    <!-- Modern Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Chart.js for interactive charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --success-color: #00f2fe;
+            --warning-color: #38f9d7;
+            --danger-color: #fa709a;
+            
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --text-white: #ffffff;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
+            --bg-dark: #1a202c;
+            --bg-card: #ffffff;
+            --bg-overlay: rgba(255, 255, 255, 0.95);
+            
+            --border-color: #e2e8f0;
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 35px 60px rgba(0, 0, 0, 0.2);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: all 0.15s ease-out;
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-      }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transform: translateX(0);
+            transition: var(--transition);
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        .sidebar-menu {
+            padding: 24px 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            border-radius: 0 25px 25px 0;
+            margin: 4px 16px 4px 0;
+            position: relative;
+        }
+
+        .menu-item:hover {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(102, 126, 234, 0.05) 100%);
+            color: var(--primary-color);
+        }
+
+        .menu-item.active {
+            background: var(--primary-gradient);
+            color: var(--text-white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .menu-item i {
+            width: 24px;
+            font-size: 20px;
+        }
+
+        .menu-text {
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+
+        .main-content.expanded {
+            margin-left: 80px;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: var(--bg-overlay);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .sidebar-toggle {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--primary-color);
+            color: var(--text-white);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: var(--bg-primary);
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            font-weight: 600;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--text-white);
+        }
+
+        .stat-icon.primary { background: var(--primary-gradient); }
+        .stat-icon.success { background: var(--success-gradient); }
+        .stat-icon.warning { background: var(--warning-gradient); }
+        .stat-icon.danger { background: var(--danger-gradient); }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .stat-change.positive { color: var(--success-color); }
+        .stat-change.negative { color: var(--danger-color); }
+
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .chart-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chart-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chart-btn.active {
+            background: var(--primary-color);
+            color: var(--text-white);
+            border-color: var(--primary-color);
+        }
+
+        /* Students Table */
+        .students-section {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 28px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            width: 300px;
+            padding: 12px 16px 12px 44px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 14px;
+            background: var(--bg-secondary);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .students-table th,
+        .students-table td {
+            padding: 16px 28px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .students-table th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .students-table td {
+            font-weight: 500;
+        }
+
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            font-weight: 600;
+            margin-right: 12px;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .student-details h4 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .student-details p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .grade-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .grade-excellent { background: rgba(0, 242, 254, 0.1); color: var(--success-color); }
+        .grade-good { background: rgba(56, 249, 215, 0.1); color: var(--warning-color); }
+        .grade-average { background: rgba(240, 147, 251, 0.1); color: var(--accent-color); }
+        .grade-poor { background: rgba(250, 112, 154, 0.1); color: var(--danger-color); }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: var(--text-white);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .dashboard-content {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-input {
+                width: 200px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 56px;
+            height: 56px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 50%;
+            color: var(--text-white);
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-xl);
+        }
     </style>
-
-<script>
-    function toggleMenu() {
-        var menuBar = document.getElementById('menuBar');
-        menuBar.classList.toggle('active');
-    }
-</script>
 </head>
 <body>
-  <script>
-    const textarea = document.getElementById('sticky-note');
-    textarea.addEventListener('input', function() {
-      // Get the first line of the textarea
-      const firstLine = this.value.substr(0, this.value.indexOf('\n'));
-      // Set the textarea value to the first line plus the user input
-      this.value = `${firstLine}\n${this.value.substr(this.value.indexOf('\n') + 1)}`;
-    });
-  </script>
-
-    <nav id="menuBar">
-        <ul>
-            <li>
-                <a href="javascript:toggleMenu()">
-                    <img src="static/images/logo.png" width="20px" height="20px" class="logo-menu" >
-                    <span id="menu">Menu</span>
-                </a>
-            </li>
-            <li>
-                <a href="/dashboard">
-                    <img src="/static/images/dash.svg" alt="Dashboard Icon">
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="/students">
-                    <img src="/static/images/students.svg" alt="Students Icon">
-                    <span>Stduents</span>
-                </a>
-            </li>
-            <li>
-                <a href="/predictor">
-                    <img src="/static/images/predict.svg" alt="Predict Icon">
-                    <span>Predictor</span>
-                </a>
-            </li>
-             <li class="profile">
-                  <div class="circle">
-                    <div class="profile-image"></div>
-                  </div>
-                </li>
-              <li class="profile-name">
-                    <div class="profile-n"></div>
-                  <span>{{ session['email'] }}</span>
-                </li>
-                <br><br><br>
-                <br>
-                <br><br><br><br><br><br><br>
-                <br><br><br><br><br><br><br><br>
-               <li class="navbar-divider"></li>
-           <li class="logout" style="margin-top: auto;">
-            <a href="/logout">
-              <div class="logout-icon">
-                <img src="/static/images/logout.svg" alt="Logout Icon">
-              </div>
-              <span class="logout-text">Logout</span>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">A</div>
+            <div class="logo-text">Academic Pro</div>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a href="/dashboard" class="menu-item active">
+                <i class="fas fa-chart-line"></i>
+                <span class="menu-text">Dashboard</span>
             </a>
-          </li>
+            <a href="/students" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span class="menu-text">Students</span>
+            </a>
+            <a href="/predictor" class="menu-item">
+                <i class="fas fa-brain"></i>
+                <span class="menu-text">AI Predictor</span>
+            </a>
+            <a href="/analytics" class="menu-item">
+                <i class="fas fa-chart-pie"></i>
+                <span class="menu-text">Analytics</span>
+            </a>
+            <a href="/reports" class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                <span class="menu-text">Reports</span>
+            </a>
+            <a href="/settings" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span class="menu-text">Settings</span>
+            </a>
+            <a href="/logout" class="menu-item" style="margin-top: auto;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="menu-text">Logout</span>
+            </a>
+        </nav>
+    </aside>
 
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Dashboard</h1>
+            </div>
+            <div class="top-bar-right">
+                <div class="user-profile">
+                    <div class="user-avatar">{{ session['email'][0].upper() if session['email'] else 'U' }}</div>
+                    <span>{{ session['email'] or 'User' }}</span>
+                </div>
+            </div>
+        </header>
 
-        </ul>
-    </nav>
-    <div style="margin-left:15%;padding:20px 16px;height:1000px;">
-    <br>
-    <h1>Notes</h1>
-<br>
-<div class="container">
-  <div class="outer-box">
-    <div class="inner-box">
-      <textarea id="note1" class="sticky-note" oninput="saveNote(1)">To Do List</textarea>
-    </div>
-    <div class="inner-box">
-      <textarea id="note2" class="sticky-note" oninput="saveNote(2)">To Do List</textarea>
-    </div>
-    <div class="inner-box">
-      <textarea id="note3" class="sticky-note" oninput="saveNote(3)">To Do List</textarea>
-    </div>
-    <div class="inner-box">
-      <textarea id="note4" class="sticky-note" oninput="saveNote(4)">To Do List</textarea>
-    </div>
-  </div>
-</div>
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon primary">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalStudents">{{ analytics.total_students if analytics else 0 }}</div>
+                    <div class="stat-label">Total Students</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>12% vs last month</span>
+                    </div>
+                </div>
 
-<br>
-<br>
-<div class="container-2" style="width: auto; margin: 0 auto; ; padding: 20px; background-color: white;border-radius: 10px;">
-  <h1>Starred Students</h1>
-  <table class="table" id="1" style=" margin-left: auto; margin-right: auto; border-radius: 20px">
-    <thead>
-      <tr>
-        <th id="first-th">Name</th>
-        <th>USN</th>
-        <th>Class</th>
-        <th>View</th>
-        <th id="last-th">Update Marks</th>
-      </tr>
-    </thead>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon success">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ "%.1f"|format(analytics.average_performance) if analytics else "0.0" }}</div>
+                    <div class="stat-label">Average Performance</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>8% improvement</span>
+                    </div>
+                </div>
 
-    <tbody>
-      {% for student in students %}
-      <tr>
-        <td>{{ student.Name }}</td>
-        <td>1AM19CS{{ student.USN }}</td>
-        <td>6Th Sem</td>
-        <td>
-          <a href="/view/{{ student.USN }}" class="btn btn-primary my-btn" style="display: inline-block; padding: 5px 10px; border: 1px solid #36B5EB; border-radius: 5px; background-color: #36B5EB; color: white; text-decoration: none;">View</a>
-        </td>
-        <td>
-          <button class="btn btn-primary my-btn" onclick="toggleMarksBox('{{ student.USN }}')" style="display: inline-block; padding: 5px 10px; border: 1px solid #36B5EB; border-radius: 5px; background-color: #36B5EB; color: white; text-decoration: none;">Update</button>
-        </td>
-      </tr>
-      <div class="marks-content" id="marksBox_{{ student.USN }}" >
-        <div class="close-button" onclick="closeMarksBox('{{ student.USN }}')" >Close</div>
-        <h2>Marks Details</h2>
-        <form id="marks-form" method="POST" action="/update-marks" enctype="multipart/form-data">
-          {{ form.csrf_token }}
-        
-          <label for="usn">{{ form.usn.label }}</label>
-          {{ form.usn }}
-          <br><br>
-        
-          <label for="sem1">{{ form.sem1.label }}</label>
-          {{ form.sem1 }}
-          <br><br>
-        
-          <label for="sem2">{{ form.sem2.label }}</label>
-          {{ form.sem2 }}
-          <br><br>
-        
-          <label for="sem3">{{ form.sem3.label }}</label>
-          {{ form.sem3 }}
-          <br><br>
-        
-          <label for="sem4">{{ form.sem4.label }}</label>
-          {{ form.sem4 }}
-          <br><br>
-        
-          <label for="sem5">{{ form.sem5.label }}</label>
-          {{ form.sem5 }}
-          <br><br>
-        
-          <button type="submit">{{ form.submit.label }}</button>
-        </form>
-        
-      </div>
-      {% endfor %}
-      </tbody>
-      </table>
-      </div>
-      
-      
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ analytics.top_performers|length if analytics else 0 }}</div>
+                    <div class="stat-label">Top Performers</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>3 new this week</span>
+                    </div>
+                </div>
 
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon danger">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ analytics.performance_distribution.below_average if analytics else 0 }}</div>
+                    <div class="stat-label">Need Attention</div>
+                    <div class="stat-change negative">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>5% decrease</span>
+                    </div>
+                </div>
+            </div>
 
-    </div>
-    <style>
-      .marks-container {
-          display: none;
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          backdrop-filter: blur(5px);
-          z-index: 9999;
-      }
-  
-      .marks-content {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 300px;
-          padding: 20px;
-          background-color: #fff;
-          border-radius: 10px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-          text-align: center;
-      }
-  
-      .student-box {
-          cursor: pointer;
-      }
-  
-      .close-button {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          font-size: 12px;
-          padding: 6px 12px;
-          background-color: #f44336;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-      }
-  
-      .mark {
-          margin-bottom: 10px;
-      }
-  </style>
-    
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Performance Trends</h3>
+                        <div class="chart-controls">
+                            <button class="chart-btn active" data-period="week">Week</button>
+                            <button class="chart-btn" data-period="month">Month</button>
+                            <button class="chart-btn" data-period="year">Year</button>
+                        </div>
+                    </div>
+                    <div style="height: 300px;">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Grade Distribution</h3>
+                    </div>
+                    <div style="height: 300px;">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Table -->
+            <div class="students-section">
+                <div class="section-header">
+                    <h3 class="section-title">Recent Students</h3>
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Search students..." id="studentSearch">
+                    </div>
+                </div>
+
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>USN</th>
+                            <th>Current Grade</th>
+                            <th>Trend</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        {% for student in students %}
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">{{ student.Name[0].upper() }}</div>
+                                    <div class="student-details">
+                                        <h4>{{ student.Name }}</h4>
+                                        <p>Student ID: {{ student.USN }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>1AM19CS{{ student.USN }}</td>
+                            <td>{{ student.sem6 }}</td>
+                            <td>
+                                {% set trend = student.sem6 - student.sem1 %}
+                                {% if trend > 0 %}
+                                    <i class="fas fa-arrow-up" style="color: var(--success-color);"></i>
+                                {% elif trend < 0 %}
+                                    <i class="fas fa-arrow-down" style="color: var(--danger-color);"></i>
+                                {% else %}
+                                    <i class="fas fa-minus" style="color: var(--text-muted);"></i>
+                                {% endif %}
+                                {{ "%.1f"|format(trend) }}
+                            </td>
+                            <td>
+                                {% if student.sem6 >= 90 %}
+                                    <span class="grade-badge grade-excellent">Excellent</span>
+                                {% elif student.sem6 >= 80 %}
+                                    <span class="grade-badge grade-good">Good</span>
+                                {% elif student.sem6 >= 70 %}
+                                    <span class="grade-badge grade-average">Average</span>
+                                {% else %}
+                                    <span class="grade-badge grade-poor">Needs Help</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <button class="action-btn btn-primary" onclick="viewStudent('{{ student.USN }}')">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="action-btn btn-secondary" onclick="predictStudent('{{ student.USN }}')">
+                                    <i class="fas fa-brain"></i> Predict
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Action Button -->
+    <button class="fab" onclick="showQuickActions()">
+        <i class="fas fa-plus"></i>
+    </button>
+
     <script>
-      function toggleMarksBox1(usn) {
-          const marksContainer = document.getElementById(usn);
-  
-          // Show the clicked marks container
-          marksContainer.style.display = 'block';
-      }
-  
-      function closeMarksBox(usn) {
-          const marksContainer = document.getElementById(usn);
-          marksContainer.style.display = 'none';
-      }
-  </script>
-  
-<script>
-  function toggleMarksBox(usn) {
-  const marksBox = document.getElementById(`marksBox_${usn}`);
-  marksBox.classList.toggle('show');
-}
+        // Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const sidebarToggle = document.getElementById('sidebarToggle');
 
-function closeMarksBox(usn) {
-  const marksBox = document.getElementById(`marksBox_${usn}`);
-  marksBox.classList.remove('show');
-}
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        });
 
-</script>
-<script>
-  
-  function saveNote(noteId) {
-  var noteContent = document.getElementById('note' + noteId).value;
+        // Performance Chart
+        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+        const performanceChart = new Chart(performanceCtx, {
+            type: 'line',
+            data: {
+                labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6'],
+                datasets: [{
+                    label: 'Class Average',
+                    data: [{{ analytics.semester_averages.sem1 if analytics else 75 }}, 
+                           {{ analytics.semester_averages.sem2 if analytics else 76 }}, 
+                           {{ analytics.semester_averages.sem3 if analytics else 74 }}, 
+                           {{ analytics.semester_averages.sem4 if analytics else 77 }}, 
+                           {{ analytics.semester_averages.sem5 if analytics else 76 }}, 
+                           {{ analytics.semester_averages.sem6 if analytics else 75 }}],
+                    borderColor: 'rgb(102, 126, 234)',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
 
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', '/save-note', true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
+        // Distribution Chart
+        const distributionCtx = document.getElementById('distributionChart').getContext('2d');
+        const distributionChart = new Chart(distributionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Excellent', 'Good', 'Average', 'Poor'],
+                datasets: [{
+                    data: [{{ analytics.performance_distribution.excellent if analytics else 8 }}, 
+                           {{ analytics.performance_distribution.good if analytics else 12 }}, 
+                           {{ analytics.performance_distribution.average if analytics else 7 }}, 
+                           {{ analytics.performance_distribution.below_average if analytics else 3 }}],
+                    backgroundColor: [
+                        'rgba(0, 242, 254, 0.8)',
+                        'rgba(56, 249, 215, 0.8)',
+                        'rgba(240, 147, 251, 0.8)',
+                        'rgba(250, 112, 154, 0.8)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
 
-  var data = JSON.stringify({
-    noteId: noteId,
-    content: noteContent
-  });
+        // Chart Controls
+        document.querySelectorAll('.chart-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
 
-  xhr.send(data);
-}
+        // Student Search
+        const studentSearch = document.getElementById('studentSearch');
+        studentSearch.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#studentsTableBody tr');
+            
+            rows.forEach(row => {
+                const studentName = row.querySelector('.student-details h4').textContent.toLowerCase();
+                const studentUSN = row.querySelector('.student-details p').textContent.toLowerCase();
+                
+                if (studentName.includes(searchTerm) || studentUSN.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
 
+        // Functions
+        function viewStudent(usn) {
+            window.location.href = `/view/${usn}`;
+        }
 
+        function predictStudent(usn) {
+            // Show loading state
+            event.target.innerHTML = '<span class="loading"></span> Predicting...';
+            
+            fetch(`/api/student/${usn}/detailed-prediction`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(`Predicted Grade: ${data.prediction.next_semester} (Confidence: ${(data.prediction.confidence * 100).toFixed(1)}%)`);
+                    } else {
+                        alert('Error generating prediction');
+                    }
+                })
+                .catch(error => {
+                    alert('Error: ' + error.message);
+                })
+                .finally(() => {
+                    event.target.innerHTML = '<i class="fas fa-brain"></i> Predict';
+                });
+        }
 
-</script>
-    </body>
+        function showQuickActions() {
+            const actions = [
+                'Add New Student',
+                'Generate Report',
+                'Export Data',
+                'Train Models'
+            ];
+            
+            const action = prompt('Quick Actions:\n' + actions.map((a, i) => `${i + 1}. ${a}`).join('\n') + '\n\nSelect action (1-4):');
+            
+            switch(action) {
+                case '1':
+                    window.location.href = '/students';
+                    break;
+                case '2':
+                    generateReport();
+                    break;
+                case '3':
+                    exportData();
+                    break;
+                case '4':
+                    trainModels();
+                    break;
+            }
+        }
+
+        function generateReport() {
+            alert('Report generation feature coming soon!');
+        }
+
+        function exportData() {
+            fetch('/export/students')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const blob = new Blob([data.csv_data], { type: 'text/csv' });
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = data.filename;
+                        a.click();
+                    }
+                });
+        }
+
+        function trainModels() {
+            if (confirm('This will retrain all ML models. Continue?')) {
+                fetch('/api/retrain-models', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.success ? 'Models retrained successfully!' : 'Error retraining models');
+                });
+            }
+        }
+
+        // Auto-refresh data every 30 seconds
+        setInterval(() => {
+            fetch('/api/analytics')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('totalStudents').textContent = data.stats.total_students;
+                        // Update other stats as needed
+                    }
+                });
+        }, 30000);
+
+        // Smooth animations on page load
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.stat-card').forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
 </html>

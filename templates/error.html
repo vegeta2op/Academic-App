@@ -1,13 +1,602 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>Error</title>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oops! Something went wrong - Academic Pro</title>
+    
+    <!-- Modern Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --danger-color: #fa709a;
+            --warning-color: #38f9d7;
+            
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --text-white: #ffffff;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
+            --bg-glass: rgba(255, 255, 255, 0.25);
+            
+            --border-color: #e2e8f0;
+            --border-radius: 16px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 35px 60px rgba(0, 0, 0, 0.2);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                rgba(102, 126, 234, 0.1) 0%, 
+                rgba(118, 75, 162, 0.1) 25%, 
+                rgba(240, 147, 251, 0.1) 50%, 
+                rgba(245, 87, 108, 0.1) 75%, 
+                rgba(102, 126, 234, 0.1) 100%);
+            animation: gradientMove 8s ease-in-out infinite;
+        }
+
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 15%;
+            left: 15%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            top: 60%;
+            right: 20%;
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 30%;
+            left: 80%;
+            animation-delay: 4s;
+        }
+
+        .shape:nth-child(4) {
+            width: 120px;
+            height: 120px;
+            bottom: 20%;
+            left: 10%;
+            animation-delay: 1s;
+        }
+
+        @keyframes gradientMove {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.7;
+            }
+            33% { 
+                transform: translateY(-30px) rotate(120deg);
+                opacity: 1;
+            }
+            66% { 
+                transform: translateY(15px) rotate(240deg);
+                opacity: 0.8;
+            }
+        }
+
+        /* Error Container */
+        .error-container {
+            position: relative;
+            z-index: 10;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 60px 50px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-icon {
+            width: 120px;
+            height: 120px;
+            background: var(--danger-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 32px;
+            font-size: 48px;
+            color: var(--text-white);
+            box-shadow: var(--shadow-lg);
+            animation: pulse 2s ease-in-out infinite;
+            position: relative;
+        }
+
+        .error-icon::before {
+            content: '';
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            border: 3px solid rgba(250, 112, 154, 0.3);
+            border-radius: 50%;
+            animation: ripple 2s ease-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .error-code {
+            font-size: 72px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fa709a, #fee140);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            text-shadow: 0 4px 8px rgba(250, 112, 154, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.2); }
+        }
+
+        .error-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-white);
+            margin-bottom: 16px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-message {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 32px;
+            line-height: 1.6;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .error-details {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .error-details h4 {
+            color: var(--text-white);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .error-details p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: var(--text-white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-white);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Help Section */
+        .help-section {
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .help-title {
+            color: var(--text-white);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .help-links {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .help-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .help-link:hover {
+            color: var(--text-white);
+            transform: translateY(-1px);
+        }
+
+        /* Progress Bar Animation */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin-top: 24px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--warning-gradient);
+            border-radius: 2px;
+            animation: progress 3s ease-in-out infinite;
+        }
+
+        @keyframes progress {
+            0% { width: 0%; transform: translateX(-100%); }
+            50% { width: 100%; transform: translateX(0%); }
+            100% { width: 100%; transform: translateX(100%); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .error-container {
+                padding: 40px 30px;
+                margin: 20px;
+            }
+
+            .error-code {
+                font-size: 56px;
+            }
+
+            .error-title {
+                font-size: 28px;
+            }
+
+            .error-message {
+                font-size: 16px;
+            }
+
+            .error-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .help-links {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .error-container {
+                background: rgba(26, 32, 44, 0.25);
+            }
+        }
+    </style>
 </head>
 <body>
-	<img src="{{ url_for('static', filename='logo.png') }}" alt="logo">
-	<h1>Error</h1>
-	<p>Sorry, the requested student's marks could not be predicted. Please check the spelling of the student's name and try again.</p>
-	<a href="{{ url_for('predictor') }}">Go back</a>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+    </div>
+
+    <!-- Error Container -->
+    <div class="error-container">
+        <div class="error-icon">
+            <i class="fas fa-{{ 'exclamation-triangle' if error_code == '404' else 'times-circle' if error_code == '500' else 'ban' }}"></i>
+        </div>
+
+        <div class="error-code">{{ error_code or '500' }}</div>
+        
+        <h1 class="error-title">
+            {% if error_code == '404' %}
+                Page Not Found
+            {% elif error_code == '500' %}
+                Server Error
+            {% elif error_code == '403' %}
+                Access Denied
+            {% else %}
+                Something Went Wrong
+            {% endif %}
+        </h1>
+
+        <p class="error-message">
+            {% if error_code == '404' %}
+                The page you're looking for seems to have vanished into the digital void. Let's get you back on track!
+            {% elif error_code == '500' %}
+                Our servers are having a moment. We're working hard to fix this issue and get things back to normal.
+            {% elif error_code == '403' %}
+                You don't have permission to access this resource. Please check your credentials and try again.
+            {% else %}
+                {{ error_message or "An unexpected error occurred. Our team has been notified and is working on a solution." }}
+            {% endif %}
+        </p>
+
+        {% if error_message %}
+        <div class="error-details">
+            <h4>Error Details</h4>
+            <p>{{ error_message }}</p>
+        </div>
+        {% endif %}
+
+        <div class="error-actions">
+            <a href="/dashboard" class="action-btn btn-primary">
+                <i class="fas fa-home"></i>
+                Back to Dashboard
+            </a>
+            
+            <button onclick="window.history.back()" class="action-btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Go Back
+            </button>
+            
+            <button onclick="window.location.reload()" class="action-btn btn-secondary">
+                <i class="fas fa-refresh"></i>
+                Try Again
+            </button>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+
+        <div class="help-section">
+            <h3 class="help-title">Need Help?</h3>
+            <div class="help-links">
+                <a href="/dashboard" class="help-link">
+                    <i class="fas fa-life-ring"></i>
+                    Support Center
+                </a>
+                <a href="mailto:support@academicpro.com" class="help-link">
+                    <i class="fas fa-envelope"></i>
+                    Contact Support
+                </a>
+                <a href="/dashboard" class="help-link">
+                    <i class="fas fa-question-circle"></i>
+                    FAQ
+                </a>
+                <a href="https://status.academicpro.com" class="help-link" target="_blank">
+                    <i class="fas fa-server"></i>
+                    System Status
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add parallax effect to background shapes
+        document.addEventListener('mousemove', function(e) {
+            const shapes = document.querySelectorAll('.shape');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            shapes.forEach((shape, index) => {
+                const speed = (index + 1) * 0.5;
+                shape.style.transform = `translate(${x * speed * 15}px, ${y * speed * 15}px)`;
+            });
+        });
+
+        // Auto-redirect after 30 seconds for 404 errors
+        const errorCode = "{{ error_code or '' }}";
+        if (errorCode === '404') {
+            setTimeout(() => {
+                if (confirm('Would you like to be redirected to the dashboard?')) {
+                    window.location.href = '/dashboard';
+                }
+            }, 30000);
+        }
+
+        // Track error for analytics
+        if (typeof gtag !== 'undefined') {
+            const errorMsg = "{{ error_message or 'Unknown error' }}";
+            gtag('event', 'exception', {
+                'description': errorCode + ' - ' + errorMsg,
+                'fatal': false
+            });
+        }
+
+        // Add smooth animations on page load
+        window.addEventListener('load', () => {
+            const container = document.querySelector('.error-container');
+            container.style.opacity = '1';
+            container.style.transform = 'translateY(0)';
+        });
+
+        // Easter egg: Konami code
+        let konamiCode = [];
+        const konamiSequence = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+        
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.keyCode);
+            if (konamiCode.length > konamiSequence.length) {
+                konamiCode.shift();
+            }
+            
+            if (JSON.stringify(konamiCode) === JSON.stringify(konamiSequence)) {
+                document.body.style.animation = 'rainbow 2s ease-in-out infinite';
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                }, 10000);
+            }
+        });
+
+        // Add rainbow animation for easter egg
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes rainbow {
+                0% { filter: hue-rotate(0deg); }
+                100% { filter: hue-rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
